@@ -1,25 +1,21 @@
 server:
   port: 8080 # 应用程序运行的端口
-
 spring:
   application:
-    name: food-warehouse-management # 应用程序名称
+    name: boke# 应用程序名称
   datasource:
-    url: jdbc:mysql://localhost:3306/foodwarehouse?useSSL=false&serverTimezone=UTC # 数据库连接URL
+    url: jdbc:mysql://localhost:3306/boke?useSSL=false&serverTimezone=UTC # 数据库连接URL
     username: root # 数据库用户名
     password: 123456 # 数据库密码
     driver-class-name: com.mysql.cj.jdbc.Driver # JDBC驱动类名
   jpa:
-    hibernate:
-      ddl-auto: update # Hibernate初始化策略
-    show-sql: true # 是否显示SQL语句
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect # 指定数据库方言
+        properties:
+          hibernate:
+            dialect: org.hibernate.dialect.MySQL8Dialect
   kafka:
     bootstrap-servers: localhost:9092 # Kafka服务器地址
     consumer:
-      group-id: food-warehouse-group # 消费者组ID
+      group-id: boke-group # 消费者组ID
       auto-offset-reset: earliest # 当没有初始偏移量时从最早的消息开始消费
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -34,19 +30,15 @@ security:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印 SQL 语句
-  mapper-locations: classpath*:mapper/*Mapper.xml # 映射文件位置
-  type-aliases-package: com.example.demo.entity # 实体类包路径
-
+  mapper-locations: classpath*:mapper/*.xml # 映射文件位置 (修正路径)
+  type-aliases-package: com.start.bike.entity # 实体类包路径
+  global-config:
+    db-config:
+      ddl: true
 logging:
   level:
-    root: INFO # 设置日志级别为INFO
-    org.springframework.web: DEBUG # Spring Web相关的日志级别为DEBUG
-    com.example.foodwarehouse: DEBUG # 自定义包的日志级别为DEBUG
+    root: TRACE # 设置日志级别为INFO
+    org.springframework.web: TRACE # Spring Web相关的日志级别为DEBUG
+    com.start.bike: TRACE # 自定义包的日志级别为DEBUG
   file:
-    name: logs/food-warehouse-management.log # 日志文件路径
-
-# 如果使用了缓存机制，可以添加以下配置
-cache:
-  type: redis # 缓存类型，这里假设使用Redis
-  redis:
-    time-to-live: 3600000 # Redis缓存条目的存活时间，单位毫秒
+    name: logs/boke-management.log # 日志文件路径
