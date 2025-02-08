@@ -35,13 +35,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!-- Spring Security -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-            <version>5.7.11</version> <!-- 确认这是存在的版本 -->
-        </dependency>
 
-        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

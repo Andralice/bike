@@ -4,11 +4,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.context.annotation.Configuration;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.function.Function;
-
+@Configuration
 public class JwtUtil {
     private String secret = "yourSecretKey";
 
