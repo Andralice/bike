@@ -8,6 +8,9 @@
     <select id="selectUser" resultType="com.start.bike.entity.User">
         SELECT * FROM tb_user WHERE username = #{username} AND password = #{password}
     </select>
+    <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
+        SELECT password FROM tb_user WHERE username = #{username}
+    </select>
     <select id="isUserExists" resultType="java.lang.Boolean">
         SELECT EXISTS(SELECT 1 FROM tb_user WHERE username = #{username})
     </select>
@@ -17,4 +20,13 @@
         INSERT INTO tb_user (username, password)
         VALUES (#{username}, #{password})
     </insert>
+    <update id="updateUser" useGeneratedKeys="true" keyProperty="id">
+        UPDATE tb_user
+        SET password = #{password}
+        WHERE username = #{username}
+    </update>
+    <delete id="deleteUser">
+        DELETE FROM tb_user
+        WHERE username = #{username}
+    </delete>
 </mapper>

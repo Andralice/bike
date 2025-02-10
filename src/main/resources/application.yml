@@ -1,6 +1,10 @@
 server:
   port: 8080 # 应用程序运行的端口
 spring:
+#  autoconfigure:
+#    exclude:
+#      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+#      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   application:
     name: boke# 应用程序名称
   datasource:
