@@ -2,8 +2,8 @@ package com.start.bike.service;
 
 import com.start.bike.entity.User;
 
-import java.util.List;
-
 public interface UserService {
-    List<User> getUsers();
+    Object selectUser(String username, String password);
+    Boolean isExistUser(String username);
+    void insertUser(String username, String password);
 }

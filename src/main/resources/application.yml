@@ -1,6 +1,10 @@
 server:
   port: 8080 # 应用程序运行的端口
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
   application:
     name: boke# 应用程序名称
   datasource:
@@ -9,9 +13,9 @@ spring:
     password: 123456 # 数据库密码
     driver-class-name: com.mysql.cj.jdbc.Driver # JDBC驱动类名
   jpa:
-        properties:
-          hibernate:
-            dialect: org.hibernate.dialect.MySQL8Dialect
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
   kafka:
     bootstrap-servers: localhost:9092 # Kafka服务器地址
     consumer:
