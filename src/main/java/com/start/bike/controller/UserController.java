@@ -2,7 +2,6 @@ package com.start.bike.controller;
 
 import com.start.bike.entity.User;
 import com.start.bike.service.UserService;
-import org.apache.kafka.common.config.types.Password;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
