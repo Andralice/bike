@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.start.bike.mapper.InventoryMapper">
+
+    <!-- 查询库存信息 -->
+    <select id="selectInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
+        SELECT
+        inventory_id AS inventoryId,
+        product_id AS productId,
+        stash_id AS stashId,
+        quantity,
+        last_stock_time AS lastStockTime
+        FROM inventory
+        WHERE 1=1
+        <if test="inventoryId != null">
+            AND inventory_id = #{inventoryId}
+        </if>
+        <if test="productId != null">
+            AND product_id = #{productId}
+        </if>
+        <if test="stashId != null">
+            AND stash_id = #{stashId}
+        </if>
+        <if test="quantity != null">
+            AND quantity = #{quantity}
+        </if>
+        <if test="lastStockTime != null">
+            AND last_stock_time = #{lastStockTime}
+        </if>
+    </select>
+
+    <!-- 插入库存信息 -->
+    <insert id="insertInventory" parameterType="com.start.bike.entity.Inventory">
+        INSERT INTO inventory (
+            product_id,
+            stash_id,
+            quantity,
+            last_stock_time
+        ) VALUES (
+                     #{productId},
+                     #{stashId},
+                     #{quantity},
+                     #{lastStockTime}
+                 )
+    </insert>
+
+    <!-- 更新库存信息 -->
+    <update id="updateInventory" parameterType="com.start.bike.entity.Inventory">
+        UPDATE inventory
+        <set>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="stashId != null">stash_id = #{stashId},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="lastStockTime != null">last_stock_time = #{lastStockTime},</if>
+        </set>
+        WHERE inventory_id = #{inventoryId}
+    </update>
+
+    <!-- 删除库存信息 -->
+    <delete id="deleteInventory" parameterType="com.start.bike.entity.Inventory">
+        DELETE FROM inventory
+        WHERE inventory_id = #{inventoryId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.start.bike.mapper.StashMapper">
+
+    <!-- Select a stash by ID -->
+    <select id="selectStash" parameterType="com.start.bike.entity.Stash" resultType="com.start.bike.entity.Stash">
+        SELECT * FROM tbStash WHERE stashId = #{stash.stashId}
+    </select>
+
+    <!-- Insert a new stash -->
+    <insert id="insertStash" parameterType="com.start.bike.entity.Stash">
+        INSERT INTO tbStash (
+                             stashName,
+                             stashAddress,
+                             storageTemperature,
+                             stashArea,
+                             managerId
+        )
+        VALUES (
+                #{stash.stashName},
+                #{stash.stashAddress},
+                #{stash.storageTemperature},
+                #{stash.stashArea},
+                #{stash.managerId}
+               )
+    </insert>
+
+    <!-- Update an existing stash -->
+    <update id="updateStash" parameterType="com.start.bike.entity.Stash">
+        UPDATE tbStash
+        SET stashName = #{stash.stashName},
+            stashAddress = #{stash.stashAddress},
+            storageTemperature = #{stash.storageTemperature},
+            stashArea = #{stash.stashArea},
+            managerId = #{stash.managerId},
+            updateTime = CURRENT_TIMESTAMP
+        WHERE stashId = #{stash.stashId}
+    </update>
+
+    <!-- Delete a stash by ID -->
+    <delete id="deleteStash" parameterType="com.start.bike.entity.Stash">
+        DELETE FROM tbStash WHERE stashId = #{stash.stashId}
+    </delete>
+</mapper>

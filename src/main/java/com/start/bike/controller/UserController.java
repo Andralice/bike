@@ -4,11 +4,11 @@ import com.start.bike.entity.User;
 import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @RestController
@@ -21,10 +21,16 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody User user) {
         try {
-            if (userService.isUserExists(user.getUsername())) {
+            if (userService.isUserExists(user)) {
                 return ResponseEntity.badRequest().body("User already exists");
             }
-            userService.insertUser(user.getUsername(), user.getPassword());
+
+            // 设置创建时间和更新时间
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            user.setCreateTime(currentTime);
+            user.setUpdateTime(currentTime);
+            // 插入用户数据
+            userService.insertUser(user);
             return ResponseEntity.ok("User registered successfully");
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to register user: " + e.getMessage());
@@ -33,9 +39,8 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        System.out.println(user);
         try {
-            Object result = userService.selectUser(user.getUsername(), user.getPassword());
+            Object result = userService.selectUser(user);
             if (result != null) {
                 return ResponseEntity.ok("Login successful");
             } else {
@@ -48,9 +53,10 @@ public class UserController {
 
     @PostMapping("/update")
     public ResponseEntity<?> update(@RequestBody User user) {
+        // 更新密码
         try {
-            if (Objects.equals(userService.selectUserByPassword(user.getUsername()).getPassword(), user.getPassword())){
-                Object result = userService.updateUser(user.getUsername(), user.getPassword());
+            if (Objects.equals(userService.selectUserByPassword(user).getPassword(), user.getPassword())){
+                Object result = userService.updateUser(user);
                 if (result != null) {
                     return ResponseEntity.ok("Update successful");
                 } else {
@@ -60,13 +66,16 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Failed to update: " + e.getMessage());
         }
+        // 更新权限
+
+
         return null;
     }
 
     @PostMapping("/delete")
     public ResponseEntity<?> delete(@RequestBody User user) {
         try {
-            Object result = userService.deleteUser(user.getUsername());
+            Object result = userService.deleteUser(user);
             if (result != null) {
                 return ResponseEntity.ok("Delete successful");
             } else {

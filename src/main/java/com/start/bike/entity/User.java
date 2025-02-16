@@ -9,44 +9,28 @@ import java.sql.Timestamp;
 @TableName("users")
 public class User {
 
-    private String username; // 用户名
-    private String password; // 密码
-    private String createTime; // 创建时间
-    private String phone; // 电话号码
-    private String position; // 职位
-    private String responsibleWarehouse; // 负责仓库
+    public Integer getUserId() {
+        return userId;
+    }
 
-    // Getter 和 Setter 方法
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String getPassword() {
         return password;
     }
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getPosition() {
@@ -57,11 +41,53 @@ public class User {
         this.position = position;
     }
 
-    public String getResponsibleWarehouse() {
-        return responsibleWarehouse;
+    public String getTelephone() {
+        return telephone;
     }
 
-    public void setResponsibleWarehouse(String responsibleWarehouse) {
-        this.responsibleWarehouse = responsibleWarehouse;
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
     }
+
+    public String getWorkPlace() {
+        return workPlace;
+    }
+
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    private Integer userId; //用户ID，主键
+    private String userName; //用户名
+    private String password; //密码
+    private String position; //职位或角色描述
+    private String telephone; //电话号码
+    private String workPlace; //工作地点
+    private String role; //角色（如：管理员、普通用户等）
+    private Timestamp createTime; //创建时间
+    private Timestamp updateTime; //更新时间
 }

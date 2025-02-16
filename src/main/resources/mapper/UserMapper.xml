@@ -6,27 +6,44 @@
 <mapper namespace="com.start.bike.mapper.UserMapper">
     <!-- 用户登录查询 -->
     <select id="selectUser" resultType="com.start.bike.entity.User">
-        SELECT * FROM tb_user WHERE username = #{username} AND password = #{password}
+        SELECT * FROM tb_user WHERE username = #{user.username} AND password = #{user.password}
     </select>
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
-        SELECT password FROM tb_user WHERE username = #{username}
+        SELECT password FROM tb_user WHERE username = #{user.username}
     </select>
     <select id="isUserExists" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT 1 FROM tb_user WHERE username = #{username})
+        SELECT EXISTS(SELECT 1 FROM tb_user WHERE username = #{user.username})
     </select>
 
     <!-- 用户注册插入 -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO tb_user (username, password)
-        VALUES (#{username}, #{password})
+        INSERT INTO tb_user (
+            username,
+            password,
+            position,
+            telephone,
+            workPlace,
+            role,
+            createTime,
+            updateTime
+        ) VALUES (
+                     #{user.username},
+                     #{user.password},
+                     #{user.position},
+                     #{user.telephone},
+                     #{user.workPlace},
+                     #{user.role},
+                     NOW(),
+                     NOW()
+                 )
     </insert>
     <update id="updateUser" useGeneratedKeys="true" keyProperty="id">
         UPDATE tb_user
-        SET password = #{password}
-        WHERE username = #{username}
+        SET password = #{user.password}
+        WHERE username = #{user.username}
     </update>
     <delete id="deleteUser">
         DELETE FROM tb_user
-        WHERE username = #{username}
+        WHERE username = #{user.username}
     </delete>
 </mapper>

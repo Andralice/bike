@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.start.bike.mapper.SuppliersMapper">
+
+    <!-- 查询供应商 -->
+    <select id="selectSuppliers" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
+        SELECT
+        supplierId,
+        supplierName,
+        contactName,
+        contactPhone,
+        address,
+        bankAccount,
+        cooperationStatus,
+        createTime,
+        updateTime
+        FROM suppliers
+        WHERE 1=1
+        <if test="supplierId != null">
+            AND supplier_id = #{supplier.supplierId}
+        </if>
+        <if test="supplierName != null and supplierName != ''">
+            AND supplier_name LIKE CONCAT('%', #{supplier.supplierName}, '%')
+        </if>
+        <if test="contactName != null and contactName != ''">
+            AND contact_name LIKE CONCAT('%', #{supplier.contactName}, '%')
+        </if>
+        <if test="contactPhone != null and contactPhone != ''">
+            AND contact_phone = #{supplier.contactPhone}
+        </if>
+        <if test="address != null and address != ''">
+            AND address LIKE CONCAT('%', #{supplier.address}, '%')
+        </if>
+        <if test="bankAccount != null and bankAccount != ''">
+            AND bank_account = #{supplier.bankAccount}
+        </if>
+        <if test="cooperationStatus != null">
+            AND cooperation_status = #{supplier.cooperationStatus}
+        </if>
+    </select>
+
+    <!-- 插入供应商 -->
+    <insert id="insertSuppliers" parameterType="com.start.bike.entity.Suppliers">
+        INSERT INTO suppliers (
+            supplierId,
+            supplierName,
+            contactName,
+            contactPhone,
+            address,
+            bankAccount,
+            cooperationStatus,
+            createTime,
+            updateTime
+        ) VALUES (
+                     #{supplier.supplierName},
+                     #{supplier.contactName},
+                     #{supplier.contactPhone},
+                     #{supplier.address},
+                     #{supplier.bankAccount},
+                     #{supplier.cooperationStatus},
+                     NOW(),
+                     NOW()
+                 )
+    </insert>
+
+    <!-- 更新供应商 -->
+    <update id="updateSuppliers" parameterType="com.start.bike.entity.Suppliers">
+        UPDATE suppliers
+        <set>
+            <if test="supplierName != null and supplierName != ''">
+                supplierName = #{supplier.supplierName},
+            </if>
+            <if test="contactName != null and contactName != ''">
+                contactName = #{supplier.contactName},
+            </if>
+            <if test="contactPhone != null and contactPhone != ''">
+                contactPhone = #{supplier.contactPhone},
+            </if>
+            <if test="address != null and address != ''">
+                address = #{supplier.address},
+            </if>
+            <if test="bankAccount != null and bankAccount != ''">
+                bankAccount = #{supplier.bankAccount},
+            </if>
+            <if test="cooperationStatus != null">
+                cooperationStatus = #{supplier.cooperationStatus},
+            </if>
+            updateTime = NOW()
+        </set>
+        WHERE supplierId = #{supplierId}
+    </update>
+
+    <!-- 删除供应商 -->
+    <delete id="deleteSuppliers" parameterType="com.start.bike.entity.Suppliers">
+        DELETE FROM suppliers
+        WHERE supplierId = #{supplier.supplierId}
+    </delete>
+
+</mapper>

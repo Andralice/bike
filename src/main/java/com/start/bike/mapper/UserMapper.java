@@ -8,15 +8,15 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
 
     // 根据用户名查询用户
-    User selectUser(@Param("username") String username, @Param("password") String password);
+    User selectUser(User user);
     // 判断用户是否存在
-    Boolean isUserExists(@Param("username") String username);
+    Boolean isUserExists(User user);
     // 插入用户
-    void insertUser(@Param("username") String username, @Param("password") String password);
+    void insertUser(User user);
     // 更新用户
-    User updateUser(@Param("username") String username, @Param("password") String password);
+    User updateUser(User user);
     // 查询用户密码
-    User selectUserByPassword(@Param("username") String username);
+    User selectUserByPassword(User user);
     // 删除用户
-    int deleteUser(@Param("username") String username);
+    int deleteUser(User user);
 }
