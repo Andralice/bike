@@ -19,7 +19,8 @@ target/
 *.iml
 *.ipr
 logs
-
+/logs/boke-management.log
+/logs/
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
