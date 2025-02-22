@@ -5,8 +5,12 @@
 
 <mapper namespace="com.start.bike.mapper.UserMapper">
     <!-- 用户登录查询 -->
-    <select id="selectUser" resultType="com.start.bike.entity.User">
-        SELECT * FROM tb_user WHERE username = #{user.username} AND password = #{user.password}
+    <resultMap id="selectUserresult" type="com.start.bike.entity.User">
+        <result column="userName" property="username"/>
+        <result column="password" property="password"/>
+    </resultMap>
+    <select id="selectUser" resultMap="selectUserresult">
+        SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
     </select>
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
         SELECT password FROM tb_user WHERE username = #{user.username}

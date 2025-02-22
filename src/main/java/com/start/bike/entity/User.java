@@ -6,7 +6,6 @@ import lombok.Data;
 import java.sql.Timestamp;
 
 @Data
-@TableName("users")
 public class User {
 
     public Integer getUserId() {
@@ -17,12 +16,12 @@ public class User {
         this.userId = userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -82,7 +81,7 @@ public class User {
     }
 
     private Integer userId; //用户ID，主键
-    private String userName; //用户名
+    private String username; //用户名
     private String password; //密码
     private String position; //职位或角色描述
     private String telephone; //电话号码

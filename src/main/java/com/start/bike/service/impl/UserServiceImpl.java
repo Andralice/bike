@@ -5,6 +5,7 @@ import com.start.bike.mapper.UserMapper;
 import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,11 +14,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+
     @Override
     public User selectUser(User user) {
         try {
-            userMapper.selectUser(user);
-            return user;
+            User ceshi1 = userMapper.selectUser(user);
+            return ceshi1;
         } catch (Exception e) {
             return null;
         }
@@ -32,7 +34,7 @@ public class UserServiceImpl implements UserService {
     public void insertUser(User user) {
         try {
 //            userMapper.insertUser(
-//                    user.getUserName(),
+//                    user.getUsername(),
 //                    user.getPassword(),
 //                    user.getPosition(),
 //                    user.getTelephone(),
