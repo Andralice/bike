@@ -26,8 +26,8 @@ public class SuppliersServiceImpl implements SuppliersService {
         return suppliersMapper.updateSuppliers(suppliers);
     }
     @Override
-    public Suppliers deleteSuppliers(Suppliers suppliers)
-    {
-        return suppliersMapper.deleteSuppliers(suppliers);
+    public Boolean deleteSuppliers(Suppliers suppliers) {
+        int result = suppliersMapper.deleteSuppliers(suppliers);
+        return result > 0;
     }
 }

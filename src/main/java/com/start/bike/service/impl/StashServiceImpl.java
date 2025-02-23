@@ -27,8 +27,8 @@ public class StashServiceImpl implements StashService {
     }
 
     @Override
-    public Stash deleteStash(Stash stash) {
-
-        return stashMapper.deleteStash(stash);
+    public Boolean deleteStash(Stash stash) {
+        int result = stashMapper.deleteStash(stash);
+        return result > 0;
     }
 }

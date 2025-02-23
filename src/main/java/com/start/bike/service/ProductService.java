@@ -6,5 +6,5 @@ public interface ProductService {
     Product selectProduct(Product product);
     Product insertProduct(Product product);
     Product updateProduct(Product product);
-    Product deleteProduct(Product product);
+    Boolean deleteProduct(Product product);
 }

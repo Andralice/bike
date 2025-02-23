@@ -6,5 +6,5 @@ public interface InventoryService {
     Inventory selectInventory(Inventory inventory);
     Inventory insertInventory(Inventory inventory);
     Inventory updateInventory(Inventory inventory);
-    Inventory deleteInventory(Inventory inventory);
+    Boolean deleteInventory(Inventory inventory);
 }

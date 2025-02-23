@@ -23,8 +23,9 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.updateProduct(product);
     }
     @Override
-    public Product deleteProduct(Product product) {
-        return productMapper.deleteProduct(product);
+    public Boolean deleteProduct(Product product) {
+        int result = productMapper.deleteProduct(product);
+        return result > 0;
     }
 
 
