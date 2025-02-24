@@ -5,18 +5,20 @@ import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import com.start.bike.JwtUtil;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
+import com.start.bike.TokenResponse;
 @RestController
 @RequestMapping("/User")
 public class UserController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody User user) {
@@ -42,7 +44,11 @@ public class UserController {
         try {
             Object result = userService.selectUser(user);
             if (result != null) {
-                return ResponseEntity.ok("Login successful");
+                // 生成 token
+                String refreshToken = jwtUtil.generateToken(user.getUsername());
+                String token = jwtUtil.generateToken(user.getUsername());
+                // 返回 token 给前端
+                return ResponseEntity.ok(new TokenResponse(token,refreshToken));
             } else {
                 return ResponseEntity.status(401).body("Invalid username or password");
             }
@@ -85,6 +91,8 @@ public class UserController {
             return ResponseEntity.status(500).body("Failed to delete: " + e.getMessage());
         }
     }
+
+
 }
 
 
