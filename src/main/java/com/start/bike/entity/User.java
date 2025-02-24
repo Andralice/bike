@@ -1,6 +1,5 @@
 package com.start.bike.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.sql.Timestamp;
