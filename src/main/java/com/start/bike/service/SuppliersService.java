@@ -6,5 +6,5 @@ public interface SuppliersService {
     Suppliers selectSuppliers(Suppliers suppliers);
     Suppliers insertSuppliers(Suppliers suppliers);
     Suppliers updateSuppliers(Suppliers suppliers);
-    Suppliers deleteSuppliers(Suppliers suppliers);
+    Boolean deleteSuppliers(Suppliers suppliers);
 }

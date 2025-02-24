@@ -26,8 +26,8 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory deleteInventory(Inventory inventory) {
-        return inventoryMapper.deleteInventory(inventory);
+    public Boolean deleteInventory(Inventory inventory) {
+        int result = inventoryMapper.deleteInventory(inventory);
+        return result > 0;
     }
-
 }

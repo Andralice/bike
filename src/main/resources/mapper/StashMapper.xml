@@ -7,12 +7,12 @@
 
     <!-- Select a stash by ID -->
     <select id="selectStash" parameterType="com.start.bike.entity.Stash" resultType="com.start.bike.entity.Stash">
-        SELECT * FROM tbStash WHERE stashId = #{stash.stashId}
+        SELECT * FROM tb_Stash WHERE stashId = #{stash.stashId}
     </select>
 
     <!-- Insert a new stash -->
     <insert id="insertStash" parameterType="com.start.bike.entity.Stash">
-        INSERT INTO tbStash (
+        INSERT INTO tb_Stash (
                              stashName,
                              stashAddress,
                              storageTemperature,
@@ -30,7 +30,7 @@
 
     <!-- Update an existing stash -->
     <update id="updateStash" parameterType="com.start.bike.entity.Stash">
-        UPDATE tbStash
+        UPDATE tb_Stash
         SET stashName = #{stash.stashName},
             stashAddress = #{stash.stashAddress},
             storageTemperature = #{stash.storageTemperature},
@@ -42,6 +42,6 @@
 
     <!-- Delete a stash by ID -->
     <delete id="deleteStash" parameterType="com.start.bike.entity.Stash">
-        DELETE FROM tbStash WHERE stashId = #{stash.stashId}
+        DELETE FROM tb_Stash WHERE stashId = #{stash.stashId}
     </delete>
 </mapper>

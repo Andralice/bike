@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 public interface UserMapper {
 
     // 根据用户名查询用户
-    User selectUser( User user);
+    User selectLoginUser( User user);
     // 判断用户是否存在
     Boolean isUserExists(User user);
     // 插入用户

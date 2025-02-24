@@ -5,5 +5,5 @@ public interface ProductMapper {
     Product selectProduct(Product product);
     Product insertProduct(Product product);
     Product updateProduct(Product product);
-    Product deleteProduct(Product product);
+    int deleteProduct(Product product);
 }

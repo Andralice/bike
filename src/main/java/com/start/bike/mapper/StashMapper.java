@@ -5,5 +5,5 @@ public interface StashMapper {
     Stash selectStash(Stash stash);
     Stash insertStash(Stash stash);
     Stash updateStash(Stash stash);
-    Stash deleteStash(Stash stash);
+    int deleteStash(Stash stash);
 }

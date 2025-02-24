@@ -27,13 +27,6 @@ public class Product {
         this.category = category;
     }
 
-    public Integer getMinStock() {
-        return minStock;
-    }
-
-    public void setMinStock(Integer minStock) {
-        this.minStock = minStock;
-    }
 
     public Integer getSupplierId() {
         return supplierId;
@@ -63,7 +56,6 @@ public class Product {
     private String productName;       // 商品名称（唯一）
     private String category;          // 商品类别（如食品、日用品）
     private Integer supplierId;       // 供应商ID（外键关联供应商表）
-    private Integer minStock;         // 最低库存预警
     private Timestamp createTime;          // 创建时间
     private Timestamp updateTime;          // 更新时间
 }

@@ -9,7 +9,7 @@
         <result column="userName" property="username"/>
         <result column="password" property="password"/>
     </resultMap>
-    <select id="selectUser" resultMap="selectUserresult">
+    <select id="selectLoginUser" resultMap="selectUserresult">
         SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
     </select>
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
@@ -41,10 +41,17 @@
                      NOW()
                  )
     </insert>
-    <update id="updateUser" useGeneratedKeys="true" keyProperty="id">
+    <update id="updateUser">
         UPDATE tb_user
-        SET password = #{user.password}
-        WHERE username = #{user.username}
+        SET
+            password = #{user.password},
+            position = #{user.position},
+            telephone = #{user.telephone},
+            workPlace = #{user.workPlace},
+            role = #{user.role},
+            updateTime = NOW()
+        WHERE
+            id = #{user.id}
     </update>
     <delete id="deleteUser">
         DELETE FROM tb_user

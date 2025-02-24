@@ -7,5 +7,5 @@ public interface StashService {
     Stash selectStash(Stash stash);
     Stash insertStash(Stash stash);
     Stash updateStash(Stash stash);
-    Stash deleteStash(Stash stash);
+    Boolean deleteStash(Stash stash);
 }
