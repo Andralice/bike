@@ -32,11 +32,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void insertUser(User user) {
-        try {
-            userMapper.insertUser(user);
-        } catch (Exception ignored) {
-
-        }
+        userMapper.insertUser(user);
+       return ;
     }
 
     @Override

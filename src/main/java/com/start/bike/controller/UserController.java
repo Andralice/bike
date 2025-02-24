@@ -6,6 +6,7 @@ import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.start.bike.JwtUtil;
 import java.sql.Timestamp;
@@ -29,8 +30,8 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @PostMapping("/signup")
-    public ResponseEntity<Map<String, Object>> signup(@RequestBody User user) {
+    @PostMapping("/createUser")
+    public ResponseEntity<Map<String, Object>> createUser(@RequestBody User user) {
         Map<String, Object> body = new HashMap<>();
         try {
             if (userService.isUserExists(user)) {
@@ -39,14 +40,9 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(body);
             }
-            if(StringValidator.isAlphanumeric(user.getUsername(), 8, 16)) {
-                body.put("success", "false");
-                body.put("message", "用户名格式错误,需要同时包含数字和字母，且不含其他字符");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(body);
-            }
-            if (StringValidator.isAlphanumeric(user.getPassword(), 8, 16)) {
-                body.put("success", "false");
+
+            if (StringValidator.isAlphanumeric(user.getPassword() , 8, 16)) {
+                body.put("success", "false2");
                 body.put("message", "密码格式错误，需要同时包含数字和字母，且不含其他字符");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(body);
@@ -58,28 +54,38 @@ public class UserController {
 
             return ResponseEntity.ok(body);
         } catch (Exception e) {
-            body.put("success", "false");
+            body.put("success", "false3");
             body.put("message", "注册失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 改为 500
                     .body(body);
         }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody User user) {
+        Map<String, Object> body = new HashMap<>();
         try {
             Object result = userService.selectLoginUser(user);
             if (result != null) {
                 // 生成 token
                 String refreshToken = jwtUtil.generateToken(user.getUsername());
                 String token = jwtUtil.generateToken(user.getUsername());
+                body.put("success", "true");
+                body.put("token", token);
                 // 返回 token 给前端
-                return ResponseEntity.ok(new TokenResponse(token,refreshToken));
+                return ResponseEntity.ok(body);
             } else {
-                return ResponseEntity.status(401).body("Invalid username or password");
+                body.put("success", "false");
+                body.put("message", "用户名或密码错误");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(body);
             }
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Failed to login: " + e.getMessage());
+            body.put("success", "false");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 改为 500
+                    .body(body);
         }
     }
 

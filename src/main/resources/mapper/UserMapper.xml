@@ -6,55 +6,42 @@
 <mapper namespace="com.start.bike.mapper.UserMapper">
     <!-- 用户登录查询 -->
     <resultMap id="selectUserresult" type="com.start.bike.entity.User">
-        <result column="userName" property="username"/>
+        <result column="username" property="username"/>
         <result column="password" property="password"/>
+        <result column="position" property="position"/>
+        <result column="workPlace" property="workPlace"/>
+        <result column="telephone" property="telephone"/>
+        <result column="role" property="role"/>
     </resultMap>
     <select id="selectLoginUser" resultMap="selectUserresult">
         SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
     </select>
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
-        SELECT password FROM tb_user WHERE username = #{user.username}
+        SELECT password FROM tb_user WHERE username = #{username}
     </select>
     <select id="isUserExists" resultType="java.lang.Boolean">
-        SELECT EXISTS(SELECT 1 FROM tb_user WHERE username = #{user.username})
+        SELECT EXISTS(SELECT 1 FROM tb_user WHERE username = #{username})
     </select>
 
     <!-- 用户注册插入 -->
-    <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO tb_user (
-            username,
-            password,
-            position,
-            telephone,
-            workPlace,
-            role,
-            createTime,
-            updateTime
-        ) VALUES (
-                     #{user.username},
-                     #{user.password},
-                     #{user.position},
-                     #{user.telephone},
-                     #{user.workPlace},
-                     #{user.role},
-                     NOW(),
-                     NOW()
-                 )
+    <insert id="insertUser" parameterType="com.start.bike.entity.User">
+        INSERT INTO tb_user (username, password, position, workPlace, telephone, role)
+        VALUES (#{username}, #{password}, #{position}, #{workPlace}, #{telephone}, #{role})
     </insert>
     <update id="updateUser">
         UPDATE tb_user
         SET
-            password = #{user.password},
-            position = #{user.position},
-            telephone = #{user.telephone},
-            workPlace = #{user.workPlace},
-            role = #{user.role},
+            password = #{password},
+            position = #{position},
+            telephone = #{telephone},
+            workPlace = #{workPlace},
+            role = #{role},
             updateTime = NOW()
         WHERE
             id = #{user.id}
     </update>
     <delete id="deleteUser">
         DELETE FROM tb_user
-        WHERE username = #{user.username}
+        WHERE username = #{username}
     </delete>
 </mapper>
