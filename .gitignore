@@ -1,3 +1,4 @@
+# 已有的规则
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -18,9 +19,10 @@ target/
 *.iws
 *.iml
 *.ipr
-logs
-/logs/boke-management.log
+
+### Logs ###
 /logs/
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
