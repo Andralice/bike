@@ -28,8 +28,8 @@
     </select>
 
 
-    <select id="isStashExist" resultType="java.lang.Boolean" resultMap="stash_result">
-        SELECT EXISTS(SELECT 1 FROM tb_stash WHERE stashName = #{stashName})
+    <select id="isStashExist" resultType="boolean">
+        SELECT COUNT(1) > 0 FROM tb_stash WHERE stashName = #{stashName}
     </select>
     <!-- 插入仓库信息 -->
     <insert id="insertStash" parameterType="com.start.bike.entity.Stash">

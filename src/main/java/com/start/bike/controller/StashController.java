@@ -23,7 +23,7 @@ public class StashController {
     public ResponseEntity<Map<String, Object>> stash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {
-            Stash result = stashService.selectStash(stash);
+            Stash result = stashService.selectStashById(stash);
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);
