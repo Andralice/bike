@@ -63,10 +63,9 @@ public class InventoryController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Inventory result = inventoryService.insertInventory(inventory);
+            inventoryService.insertInventory(inventory);
             body.put("success", "true");
             body.put("message", "库存记录创建成功");
-            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");
@@ -86,15 +85,14 @@ public class InventoryController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Inventory result = inventoryService.updateInventory(inventory);
-            if (result == null) {
-                body.put("success", "false");
-                body.put("message", "库存记录不存在");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
+            inventoryService.updateInventory(inventory);
+//            if (result == null) {
+//                body.put("success", "false");
+//                body.put("message", "库存记录不存在");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+//            }
             body.put("success", "true");
             body.put("message", "库存更新成功");
-            body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");

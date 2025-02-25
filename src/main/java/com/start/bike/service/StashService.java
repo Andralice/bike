@@ -5,7 +5,9 @@ import com.start.bike.entity.Stash;
 
 public interface StashService {
     Stash selectStash(Stash stash);
-    Stash insertStash(Stash stash);
-    Stash updateStash(Stash stash);
+    Stash selectStashById(Stash stash);
+    void insertStash(Stash stash);
+    Boolean isStashExist(Stash stash);
+    void updateStash(Stash stash);
     Boolean deleteStash(Stash stash);
 }

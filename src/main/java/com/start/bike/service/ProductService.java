@@ -4,7 +4,7 @@ import com.start.bike.entity.Product;
 
 public interface ProductService {
     Product selectProduct(Product product);
-    Product insertProduct(Product product);
-    Product updateProduct(Product product);
+    void insertProduct(Product product);
+    void updateProduct(Product product);
     Boolean deleteProduct(Product product);
 }

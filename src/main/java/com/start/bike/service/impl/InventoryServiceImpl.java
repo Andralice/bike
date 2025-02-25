@@ -16,13 +16,13 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Inventory insertInventory(Inventory inventory) {
-        return inventoryMapper.insertInventory(inventory);
+    public void insertInventory(Inventory inventory) {
+        inventoryMapper.insertInventory(inventory);
     }
 
     @Override
-    public Inventory updateInventory(Inventory inventory) {
-        return inventoryMapper.updateInventory(inventory);
+    public void updateInventory(Inventory inventory) {
+        inventoryMapper.updateInventory(inventory);
     }
 
     @Override

@@ -2,6 +2,14 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.start.bike.mapper.SuppliersMapper">
+    <resultMap id="supplier_result" type="com.start.bike.entity.Suppliers">
+        <result column="supplierId" property="supplierId"/>
+        <result column="supplierName" property="supplierName"/>
+        <result column="contactName" property="contactName"/>
+        <result column="address" property="address"/>
+        <result column="bankAccount" property="bankAccount"/>
+        <result column="cooperationStatus" property="cooperationStatus"/>
+    </resultMap>
 
     <!-- 查询供应商 -->
     <select id="selectSuppliers" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
@@ -18,25 +26,25 @@
         FROM suppliers
         WHERE 1=1
         <if test="supplierId != null">
-            AND supplier_id = #{supplier.supplierId}
+            AND supplierId = #{supplierId}
         </if>
         <if test="supplierName != null and supplierName != ''">
-            AND supplier_name LIKE CONCAT('%', #{supplier.supplierName}, '%')
+            AND supplierName LIKE CONCAT('%', #{supplierName}, '%')
         </if>
         <if test="contactName != null and contactName != ''">
-            AND contact_name LIKE CONCAT('%', #{supplier.contactName}, '%')
+            AND contactName LIKE CONCAT('%', #{contactName}, '%')
         </if>
         <if test="contactPhone != null and contactPhone != ''">
-            AND contact_phone = #{supplier.contactPhone}
+            AND contactPhone = #{contactPhone}
         </if>
         <if test="address != null and address != ''">
-            AND address LIKE CONCAT('%', #{supplier.address}, '%')
+            AND address LIKE CONCAT('%', #{address}, '%')
         </if>
         <if test="bankAccount != null and bankAccount != ''">
-            AND bank_account = #{supplier.bankAccount}
+            AND bankAccount = #{bankAccount}
         </if>
         <if test="cooperationStatus != null">
-            AND cooperation_status = #{supplier.cooperationStatus}
+            AND cooperationStatus = #{cooperationStatus}
         </if>
     </select>
 
@@ -53,12 +61,12 @@
             createTime,
             updateTime
         ) VALUES (
-                     #{supplier.supplierName},
-                     #{supplier.contactName},
-                     #{supplier.contactPhone},
-                     #{supplier.address},
-                     #{supplier.bankAccount},
-                     #{supplier.cooperationStatus},
+                     #{supplierName},
+                     #{contactName},
+                     #{contactPhone},
+                     #{address},
+                     #{bankAccount},
+                     #{cooperationStatus},
                      NOW(),
                      NOW()
                  )
@@ -69,22 +77,22 @@
         UPDATE suppliers
         <set>
             <if test="supplierName != null and supplierName != ''">
-                supplierName = #{supplier.supplierName},
+                supplierName = #{supplierName},
             </if>
             <if test="contactName != null and contactName != ''">
-                contactName = #{supplier.contactName},
+                contactName = #{contactName},
             </if>
             <if test="contactPhone != null and contactPhone != ''">
-                contactPhone = #{supplier.contactPhone},
+                contactPhone = #{contactPhone},
             </if>
             <if test="address != null and address != ''">
-                address = #{supplier.address},
+                address = #{address},
             </if>
             <if test="bankAccount != null and bankAccount != ''">
-                bankAccount = #{supplier.bankAccount},
+                bankAccount = #{bankAccount},
             </if>
             <if test="cooperationStatus != null">
-                cooperationStatus = #{supplier.cooperationStatus},
+                cooperationStatus = #{.ooperationStatus},
             </if>
             updateTime = NOW()
         </set>
@@ -94,7 +102,7 @@
     <!-- 删除供应商 -->
     <delete id="deleteSuppliers" parameterType="com.start.bike.entity.Suppliers">
         DELETE FROM suppliers
-        WHERE supplierId = #{supplier.supplierId}
+        WHERE supplierId = #{supplierId}
     </delete>
 
 </mapper>

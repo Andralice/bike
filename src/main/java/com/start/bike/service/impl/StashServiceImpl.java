@@ -17,13 +17,23 @@ public class StashServiceImpl implements StashService {
     }
 
     @Override
-    public Stash insertStash(Stash stash) {
-        return stashMapper.insertStash(stash);
+    public Stash selectStashById(Stash stash) {
+        return stashMapper.selectStashById(stash);
     }
 
     @Override
-    public Stash updateStash(Stash stash) {
-        return stashMapper.updateStash(stash);
+    public Boolean isStashExist(Stash stash) {
+        return stashMapper.isStashExist(stash);
+    }
+
+    @Override
+    public void insertStash(Stash stash) {
+        stashMapper.insertStash(stash);
+    }
+
+    @Override
+    public void updateStash(Stash stash) {
+        stashMapper.updateStash(stash);
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.start.bike.entity.Inventory;
 
 public interface InventoryService {
     Inventory selectInventory(Inventory inventory);
-    Inventory insertInventory(Inventory inventory);
-    Inventory updateInventory(Inventory inventory);
+    void insertInventory(Inventory inventory);
+    void updateInventory(Inventory inventory);
     Boolean deleteInventory(Inventory inventory);
 }

@@ -15,12 +15,12 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.selectProduct(product);
     }
     @Override
-    public Product insertProduct(Product product) {
-        return productMapper.insertProduct(product);
+    public void insertProduct(Product product) {
+        productMapper.insertProduct(product);
     }
     @Override
-    public Product updateProduct(Product product) {
-        return productMapper.updateProduct(product);
+    public void updateProduct(Product product) {
+        productMapper.updateProduct(product);
     }
     @Override
     public Boolean deleteProduct(Product product) {

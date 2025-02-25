@@ -14,7 +14,7 @@ public interface UserMapper {
     // 插入用户
     void insertUser(User user);
     // 更新用户
-    User updateUser(User user);
+    void updateUser(User user);
     // 查询用户密码
     User selectUserByPassword(User user);
     // 删除用户

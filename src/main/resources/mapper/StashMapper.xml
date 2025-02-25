@@ -4,44 +4,70 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.start.bike.mapper.StashMapper">
+    <resultMap id="stash_result" type="com.start.bike.entity.Stash">
+        <result column="stashName" property="stashName"/>
+        <result column="stashAddress" property="stashAddress"/>
+        <result column="storageTemperature" property="storageTemperature"/>
+        <result column="stashArea" property="stashArea"/>
+        <result column="managerId" property="managerId"/>
+    </resultMap>
 
-    <!-- Select a stash by ID -->
-    <select id="selectStash" parameterType="com.start.bike.entity.Stash" resultType="com.start.bike.entity.Stash">
-        SELECT * FROM tb_Stash WHERE stashId = #{stash.stashId}
+    <!-- 根据stashId查询 -->
+    <select id="selectStash" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
+        SELECT * FROM tb_stash
     </select>
 
-    <!-- Insert a new stash -->
+    <select id="selectStashById" parameterType="com.start.bike.entity.Stash" resultMap="stash_result">
+        SELECT * FROM tb_stash WHERE 1=1
+        <if test="stashName != null">
+            AND stashName = #{stashName}
+        </if>
+        <if test="stashId != null">
+            AND stashId = #{stashId}
+        </if>
+    </select>
+
+
+    <select id="isStashExist" resultType="java.lang.Boolean" resultMap="stash_result">
+        SELECT EXISTS(SELECT 1 FROM tb_stash WHERE stashName = #{stashName})
+    </select>
+    <!-- 插入仓库信息 -->
     <insert id="insertStash" parameterType="com.start.bike.entity.Stash">
-        INSERT INTO tb_Stash (
-                             stashName,
-                             stashAddress,
-                             storageTemperature,
-                             stashArea,
-                             managerId
-        )
-        VALUES (
-                #{stash.stashName},
-                #{stash.stashAddress},
-                #{stash.storageTemperature},
-                #{stash.stashArea},
-                #{stash.managerId}
-               )
+        INSERT INTO tb_stash (
+            stashName,
+            stashAddress,
+            storageTemperature,
+            stashArea,
+            managerId,
+            createTime,
+            updateTime
+        ) VALUES (
+                     #{stashName},
+                     #{stashAddress},
+                     #{storageTemperature},
+                     #{stashArea},
+                     #{managerId},
+                        NOW(),
+                  NOW()
+                 )
     </insert>
 
-    <!-- Update an existing stash -->
+    <!-- 更新仓库信息 -->
     <update id="updateStash" parameterType="com.start.bike.entity.Stash">
-        UPDATE tb_Stash
-        SET stashName = #{stash.stashName},
-            stashAddress = #{stash.stashAddress},
-            storageTemperature = #{stash.storageTemperature},
-            stashArea = #{stash.stashArea},
-            managerId = #{stash.managerId},
-            updateTime = CURRENT_TIMESTAMP
-        WHERE stashId = #{stash.stashId}
+        UPDATE tb_stash
+        <set>
+            <if test="stashName != null">stashName = #{stashName},</if>
+            <if test="stashAddress != null">stashAddress = #{stashAddress},</if>
+            <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
+            <if test="stashArea != null">stashArea = #{stashArea},</if>
+            <if test="managerId != null">managerId = #{managerId},</if>
+            updateTime = NOW()
+        </set>
+        WHERE stashId = #{stashId}
     </update>
 
-    <!-- Delete a stash by ID -->
-    <delete id="deleteStash" parameterType="com.start.bike.entity.Stash">
-        DELETE FROM tb_Stash WHERE stashId = #{stash.stashId}
+    <!-- 根据stashId删除 -->
+    <delete id="deleteStash" parameterType="Integer">
+        DELETE FROM tb_stash WHERE stashId = #{stashId}
     </delete>
 </mapper>

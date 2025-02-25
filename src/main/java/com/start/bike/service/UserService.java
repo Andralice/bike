@@ -6,7 +6,7 @@ public interface UserService {
     User selectLoginUser(User user);
     Boolean isUserExists(User user);
     void insertUser(User user);
-    User updateUser(User user);
+    void updateUser(User user);
     User selectUserByPassword(User user);
     Boolean deleteUser(User user);
 }

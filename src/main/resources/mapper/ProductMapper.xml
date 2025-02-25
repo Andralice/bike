@@ -5,67 +5,66 @@
 
     <!-- Result Map for Product -->
     <resultMap id="ProductResultMap" type="com.start.bike.entity.Product">
-        <id property="productId" column="product_id"/>
-        <result property="productName" column="product_name"/>
+        <id property="productId" column="productId"/>
+        <result property="productName" column="productName"/>
         <result property="category" column="category"/>
-        <result property="supplierId" column="supplier_id"/>
-        <result property="minStock" column="min_stock"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateTime" column="update_time"/>
+        <result property="supplierId" column="supplierId"/>
+        <result property="minStock" column="minStock"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
     </resultMap>
 
     <!-- Select Product by Primary Key -->
     <select id="selectProduct" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
         SELECT
-            product_id,
-            product_name,
+            productId,
+            productName,
             category,
-            supplier_id,
-            min_stock,
-            create_time,
-            update_time
+            supplierId,
+            createTime,
+            updateTime
         FROM
-            product
-        WHERE
-            product_id = #{product.productId}
+            tb_product
+        WHERE 1 = 1
+        <if test="productId != null">AND productId = #{productId}</if>
+        <if test="productName != null">AND productName = #{productName}</if>
+        <if test="category != null">AND category = #{category}</if>
+        <if test="supplierId != null">AND supplierId = #{supplierId}</if>
     </select>
 
     <!-- Insert Product -->
     <insert id="insertProduct" parameterType="com.start.bike.entity.Product">
-        INSERT INTO product (
-            product_name,
+        INSERT INTO tb_product (
+            productName,
             category,
-            supplier_id,
-            min_stock,
+            supplierId,
             create_time,
             update_time
         ) VALUES (
-                     #{product.productName},
-                     #{product.category},
-                     #{product.supplierId},
-                     #{product.minStock},
-                     #{product.createTime},
-                     #{product.updateTime}
+                     #{productName},
+                     #{category},
+                     #{supplierId},
+                     NOW(),
+                     NOW()
                  )
     </insert>
 
     <!-- Update Product -->
     <update id="updateProduct" parameterType="com.start.bike.entity.Product">
-        UPDATE product
+        UPDATE tb_product
         SET
-            product_name = #{product.productName},
-            category = #{product.category},
-            supplier_id = #{product.supplierId},
-            min_stock = #{product.minStock},
-            update_time = #{product.updateTime}
+           <if test="productName != null">productName = #{productName},</if>
+           <if test="category != nulll">category = #{category},</if>
+           <if test="supplierId != null">supplierId = #{supplierId},</if>
+            updateTime = NOW()
         WHERE
-            product_id = #{product.productId}
+            productId = #{productId}
     </update>
 
     <!-- Delete Product -->
     <delete id="deleteProduct" parameterType="com.start.bike.entity.Product">
-        DELETE FROM product
-        WHERE product_id = #{product.productId}
+        DELETE FROM tb_product
+        WHERE productId = #{productId}
     </delete>
 
 </mapper>

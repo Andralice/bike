@@ -16,14 +16,14 @@ public class SuppliersServiceImpl implements SuppliersService {
         return suppliersMapper.selectSuppliers(suppliers);
     }
     @Override
-    public Suppliers insertSuppliers(Suppliers suppliers)
+    public void insertSuppliers(Suppliers suppliers)
     {
-        return suppliersMapper.insertSuppliers(suppliers);
+        suppliersMapper.insertSuppliers(suppliers);
     }
     @Override
-    public Suppliers updateSuppliers(Suppliers suppliers)
+    public void updateSuppliers(Suppliers suppliers)
     {
-        return suppliersMapper.updateSuppliers(suppliers);
+        suppliersMapper.updateSuppliers(suppliers);
     }
     @Override
     public Boolean deleteSuppliers(Suppliers suppliers) {

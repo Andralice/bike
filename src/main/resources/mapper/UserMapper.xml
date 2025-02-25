@@ -5,7 +5,7 @@
 
 <mapper namespace="com.start.bike.mapper.UserMapper">
     <!-- 用户登录查询 -->
-    <resultMap id="selectUserresult" type="com.start.bike.entity.User">
+    <resultMap id="user_result" type="com.start.bike.entity.User">
         <result column="username" property="username"/>
         <result column="password" property="password"/>
         <result column="position" property="position"/>
@@ -13,7 +13,8 @@
         <result column="telephone" property="telephone"/>
         <result column="role" property="role"/>
     </resultMap>
-    <select id="selectLoginUser" resultMap="selectUserresult">
+
+    <select id="selectLoginUser" resultMap="user_result">
         SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
     </select>
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
@@ -31,17 +32,17 @@
     <update id="updateUser">
         UPDATE tb_user
         SET
-            password = #{password},
-            position = #{position},
-            telephone = #{telephone},
-            workPlace = #{workPlace},
-            role = #{role},
+        <if test="password != null">password = #{password},</if>
+        <if test="position != null">position = #{position},</if>
+        <if test="telephone != null">telephone = #{telephone},</if>
+        <if test="workPlace != null">workPlace = #{workPlace},</if>
+        <if test="role != null">role = #{role},</if>
             updateTime = NOW()
         WHERE
-            id = #{user.id}
+            userId = #{userId}
     </update>
     <delete id="deleteUser">
         DELETE FROM tb_user
-        WHERE username = #{username}
+        WHERE userId = #{userId}
     </delete>
 </mapper>

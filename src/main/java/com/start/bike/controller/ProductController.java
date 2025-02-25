@@ -51,10 +51,9 @@ public class ProductController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Product result = productService.insertProduct(product);
+            productService.insertProduct(product);
             body.put("success", "true");
             body.put("message", "商品创建成功");
-            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");
@@ -74,15 +73,15 @@ public class ProductController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Product result = productService.updateProduct(product);
-            if (result == null) {
-                body.put("success", "false");
-                body.put("message", "商品不存在");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
+            productService.updateProduct(product);
+//            if (result == null) {
+//                body.put("success", "false");
+//                body.put("message", "商品不存在");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+//            }
             body.put("success", "true");
             body.put("message", "商品更新成功");
-            body.put("result", result);
+//            body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");

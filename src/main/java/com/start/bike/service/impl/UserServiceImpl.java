@@ -17,12 +17,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User selectLoginUser(User user) {
-        try {
-            User ceshi1 = userMapper.selectLoginUser(user);
-            return ceshi1;
-        } catch (Exception e) {
-            return null;
-        }
+        return userMapper.selectLoginUser(user);
     }
 
     @Override
@@ -33,26 +28,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public void insertUser(User user) {
         userMapper.insertUser(user);
-       return ;
     }
 
     @Override
     public User selectUserByPassword(User user) {
-        try {
-            userMapper.selectUserByPassword(user);
-            return user;
-        } catch (Exception e) {
-            return null;
-        }
+            return  userMapper.selectUserByPassword(user);
     }
     @Override
-    public User updateUser(User user) {
-        try {
-            userMapper.updateUser(user);
-            return user;
-        } catch (Exception e) {
-            return null;
-        }
+    public void updateUser(User user) {
+        userMapper.updateUser(user);
     }
 
     @Override

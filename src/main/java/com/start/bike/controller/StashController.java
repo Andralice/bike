@@ -5,6 +5,7 @@ import com.start.bike.service.StashService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +19,7 @@ public class StashController {
     @Autowired
     private StashService stashService ;
 
-    @RequestMapping("/selectStash")
+    @PostMapping("/selectStash")
     public ResponseEntity<Map<String, Object>> stash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {
@@ -34,11 +35,18 @@ public class StashController {
         }
     }
 
-    @RequestMapping("/insertStash")
+    @PostMapping("/insertStash")
     public ResponseEntity<Map<String, Object>>  insertStash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {
-            Stash result = stashService.insertStash(stash);
+            if (stashService.isStashExist(stash)){
+                body.put("success", "false");
+                body.put("message","仓库已存在");
+                return ResponseEntity.ok(body);
+            }
+            stashService.insertStash(stash);
+            // 返回新建仓库信息
+            Stash result = stashService.selectStashById(stash);
             body.put("success", "true");
             body.put("message", "仓库创建成功");
             body.put("result", result);
@@ -46,15 +54,18 @@ public class StashController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "仓库创建失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
 
-    @RequestMapping("/updateStash")
+    @PostMapping("/updateStash")
     public ResponseEntity<Map<String,Object>> updateStash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {
-            Stash result = stashService.updateStash(stash);
+            stashService.updateStash(stash);
+            // 返回更新后的仓库信息
+            Stash result = stashService.selectStashById(stash);
             body.put("success", "true");
             body.put("message", "仓库更新成功");
             body.put("result", result);
@@ -63,11 +74,12 @@ public class StashController {
         catch (Exception e) {
             body.put("success", "false");
             body.put("message", "仓库更新失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
 
-    @RequestMapping("/deleteStash")
+    @PostMapping("/deleteStash")
     public ResponseEntity<Map<String,Object>> deleteStash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {
@@ -83,6 +95,7 @@ public class StashController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "仓库删除失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }

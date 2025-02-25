@@ -59,10 +59,9 @@ public class SuppliersController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Suppliers result = suppliersService.insertSuppliers(suppliers);
+            suppliersService.insertSuppliers(suppliers);
             body.put("success", "true");
             body.put("message", "供应商创建成功");
-            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");
@@ -82,15 +81,15 @@ public class SuppliersController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Suppliers result = suppliersService.updateSuppliers(suppliers);
-            if (result == null) {
-                body.put("success", "false");
-                body.put("message", "供应商不存在");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
+            suppliersService.updateSuppliers(suppliers);
+//            if (result == null) {
+//                body.put("success", "false");
+//                body.put("message", "供应商不存在");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+//            }
             body.put("success", "true");
             body.put("message", "供应商更新成功");
-            body.put("result", result);
+//            body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
