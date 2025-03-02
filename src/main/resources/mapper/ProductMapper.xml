@@ -8,8 +8,9 @@
         <id property="productId" column="productId"/>
         <result property="productName" column="productName"/>
         <result property="category" column="category"/>
-        <result property="supplierId" column="supplierId"/>
-        <result property="minStock" column="minStock"/>
+        <result property="supplierName" column="supplierName"/>
+        <result property="stashName" column="stashName"/>
+        <result property="storageTemperature" column="storageTemperature"/>
         <result property="createTime" column="createTime"/>
         <result property="updateTime" column="updateTime"/>
     </resultMap>
@@ -20,7 +21,9 @@
             productId,
             productName,
             category,
-            supplierId,
+            supplierName,
+            stashName,
+            storageTemperature,
             createTime,
             updateTime
         FROM
@@ -29,7 +32,9 @@
         <if test="productId != null">AND productId = #{productId}</if>
         <if test="productName != null">AND productName = #{productName}</if>
         <if test="category != null">AND category = #{category}</if>
-        <if test="supplierId != null">AND supplierId = #{supplierId}</if>
+        <if test="supplierName != null">AND supplierName = #{supplierName}</if>
+        <if test="stashName != null">AND stashName = #{stashName}</if>
+        <if test="storageTemperature != null">AND storageTemperature = #{storageTemperature}</if>
     </select>
 
     <!-- Insert Product -->
@@ -37,13 +42,17 @@
         INSERT INTO tb_product (
             productName,
             category,
-            supplierId,
-            create_time,
-            update_time
+            supplierName,
+            stashName,
+            storageTemperature,
+            createTime,
+            updateTime
         ) VALUES (
                      #{productName},
                      #{category},
-                     #{supplierId},
+                     #{supplierName},
+                     #{stashName},
+                     #{storageTemperature},
                      NOW(),
                      NOW()
                  )
@@ -54,8 +63,10 @@
         UPDATE tb_product
         SET
            <if test="productName != null">productName = #{productName},</if>
-           <if test="category != nulll">category = #{category},</if>
-           <if test="supplierId != null">supplierId = #{supplierId},</if>
+           <if test="category != null">category = #{category},</if>
+           <if test="supplierName != null">supplierName = #{supplierName},</if>
+           <if test="stashName != null">stashName = #{stashName},</if>
+           <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
             updateTime = NOW()
         WHERE
             productId = #{productId}

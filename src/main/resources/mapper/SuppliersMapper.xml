@@ -23,7 +23,7 @@
         cooperationStatus,
         createTime,
         updateTime
-        FROM suppliers
+        FROM tb_suppliers
         WHERE 1=1
         <if test="supplierId != null">
             AND supplierId = #{supplierId}
@@ -50,8 +50,7 @@
 
     <!-- 插入供应商 -->
     <insert id="insertSuppliers" parameterType="com.start.bike.entity.Suppliers">
-        INSERT INTO suppliers (
-            supplierId,
+        INSERT INTO tb_suppliers (
             supplierName,
             contactName,
             contactPhone,
@@ -74,7 +73,7 @@
 
     <!-- 更新供应商 -->
     <update id="updateSuppliers" parameterType="com.start.bike.entity.Suppliers">
-        UPDATE suppliers
+        UPDATE tb_suppliers
         <set>
             <if test="supplierName != null and supplierName != ''">
                 supplierName = #{supplierName},
@@ -92,7 +91,7 @@
                 bankAccount = #{bankAccount},
             </if>
             <if test="cooperationStatus != null">
-                cooperationStatus = #{.ooperationStatus},
+                cooperationStatus = #{cooperationStatus},
             </if>
             updateTime = NOW()
         </set>
@@ -101,7 +100,7 @@
 
     <!-- 删除供应商 -->
     <delete id="deleteSuppliers" parameterType="com.start.bike.entity.Suppliers">
-        DELETE FROM suppliers
+        DELETE FROM tb_suppliers
         WHERE supplierId = #{supplierId}
     </delete>
 

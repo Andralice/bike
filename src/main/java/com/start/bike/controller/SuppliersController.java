@@ -25,11 +25,11 @@ public class SuppliersController {
         Map<String, Object> body = new HashMap<>();
         try {
             // 参数校验示例
-            if (suppliers.getSupplierId() == null) {
-                body.put("success", "false");
-                body.put("message", "供应商ID不能为空");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-            }
+//            if (suppliers.getSupplierId() == null) {
+//                body.put("success", "false");
+//                body.put("message", "供应商ID不能为空");
+//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+//            }
 
             Suppliers result = suppliersService.selectSuppliers(suppliers);
             if (result == null) {
@@ -44,6 +44,7 @@ public class SuppliersController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "供应商查询失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -62,10 +63,13 @@ public class SuppliersController {
             suppliersService.insertSuppliers(suppliers);
             body.put("success", "true");
             body.put("message", "供应商创建成功");
+            Suppliers result = suppliersService.selectSuppliers(suppliers);
+            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "供应商创建失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -82,18 +86,15 @@ public class SuppliersController {
             }
 
             suppliersService.updateSuppliers(suppliers);
-//            if (result == null) {
-//                body.put("success", "false");
-//                body.put("message", "供应商不存在");
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-//            }
             body.put("success", "true");
             body.put("message", "供应商更新成功");
-//            body.put("result", result);
+            Suppliers result = suppliersService.selectSuppliers(suppliers);
+            body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "供应商更新失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -121,6 +122,7 @@ public class SuppliersController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "供应商删除失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }

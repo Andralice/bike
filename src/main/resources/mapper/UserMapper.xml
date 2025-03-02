@@ -15,7 +15,10 @@
     </resultMap>
 
     <select id="selectLoginUser" resultMap="user_result">
-        SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
+    SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
+</select>
+    <select id="selectAllUser" resultMap="user_result">
+        SELECT * FROM tb_user
     </select>
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
         SELECT password FROM tb_user WHERE username = #{username}

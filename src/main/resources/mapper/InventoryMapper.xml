@@ -8,6 +8,8 @@
         <result property="inventoryId" column="inventoryId"/>
         <result property="productId" column="productId"/>
         <result property="stashId" column="stashId"/>
+        <result property="supplierId" column="supplierId"/>
+        <result property="quantity" column="quantity"/>
     </resultMap>
 
     <!-- 查询库存信息 -->
@@ -16,54 +18,49 @@
         inventoryId,
         productId,
         stashId,
+        supplierId,
         quantity,
-        createTime,
-        updateTime
-        FROM inventory
+        lastStockTime
+        FROM tb_inventory
         WHERE 1=1
         <if test="inventoryId != null">
             AND inventoryId = #{inventoryId}
-        </if>
-        <if test="productId != null">
-            AND productId = #{productId}
-        </if>
-        <if test="stashId != null">
-            AND stashId = #{stashId}
         </if>
     </select>
 
     <!-- 插入库存信息 -->
     <insert id="insertInventory" parameterType="com.start.bike.entity.Inventory">
-        INSERT INTO inventory (
+        INSERT INTO tb_inventory (
             productId,
             stashId,
+            supplierId,
             quantity,
-            createTime,
-            updateTime
+            lastStockTime
         ) VALUES (
                      #{productId},
                      #{stashId},
+                     #{supplierId},
                      #{quantity},
-                    NOW(),
-                  NOW()
+                     NOW()
                  )
     </insert>
 
     <!-- 更新库存信息 -->
     <update id="updateInventory" parameterType="com.start.bike.entity.Inventory">
-        UPDATE inventory
+        UPDATE tb_inventory
         <set>
             <if test="productId != null">productId = #{productId},</if>
             <if test="stashId != null">stashId = #{stashId},</if>
+            <if test="supplierId != null">supplierId = #{supplierId},</if>
             <if test="quantity != null">quantity = #{quantity},</if>
-            updateTime = NOW()
+            lastStockTime = NOW()
         </set>
         WHERE inventoryId = #{inventoryId}
     </update>
 
     <!-- 删除库存信息 -->
     <delete id="deleteInventory" parameterType="com.start.bike.entity.Inventory">
-        DELETE FROM inventory
+        DELETE FROM tb_inventory
         WHERE inventoryId = #{inventoryId}
     </delete>
 

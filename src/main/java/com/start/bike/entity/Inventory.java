@@ -7,9 +7,9 @@ import java.sql.Timestamp;
 @Data
 public class Inventory {
     private Integer inventoryId;
-    private Integer productId;
-    private Integer stashId;
+    private Integer productId;  // 商品ID
+    private Integer stashId;    // 仓库ID
+    private Integer supplierId; // 供应商ID
     private Integer quantity;
-    private Timestamp createTime;          // 创建时间
-    private Timestamp updateTime;          // 更新时间
+    private Timestamp lastStockTime;
 }

@@ -62,6 +62,9 @@ public class InventoryController {
                 body.put("message", "仓库ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
+            if (inventory.getQuantity() == null) {
+                body.put("success", "false");
+            }
 
             inventoryService.insertInventory(inventory);
             body.put("success", "true");
@@ -70,6 +73,7 @@ public class InventoryController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "库存创建失败，请稍后重试");
+            body.put("result", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -93,6 +97,8 @@ public class InventoryController {
 //            }
             body.put("success", "true");
             body.put("message", "库存更新成功");
+            Inventory result = inventoryService.selectInventory(inventory);
+            body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");

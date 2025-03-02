@@ -52,12 +52,15 @@ public class ProductController {
             }
 
             productService.insertProduct(product);
+            Product result = productService.selectProduct(product);
             body.put("success", "true");
             body.put("message", "商品创建成功");
+            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "商品创建失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -74,18 +77,16 @@ public class ProductController {
             }
 
             productService.updateProduct(product);
-//            if (result == null) {
-//                body.put("success", "false");
-//                body.put("message", "商品不存在");
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-//            }
             body.put("success", "true");
             body.put("message", "商品更新成功");
+            Product result = productService.selectProduct(product);
+            body.put("result", result);
 //            body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "商品更新失败，请稍后重试");
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
