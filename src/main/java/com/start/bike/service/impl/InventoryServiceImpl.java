@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.start.bike.mapper.InventoryMapper;
 
+import java.util.List;
+
 @Service
 public class InventoryServiceImpl implements InventoryService {
     @Autowired
@@ -13,6 +15,11 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public Inventory selectInventory(Inventory inventory) {
         return inventoryMapper.selectInventory(inventory);
+    }
+
+    @Override
+    public List<Inventory> selectAllInventory(Inventory inventory) {
+        return inventoryMapper.selectAllInventory(inventory);
     }
 
     @Override

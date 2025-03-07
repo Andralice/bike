@@ -12,6 +12,8 @@ public class Suppliers {
     private String address; // 详细地址
     private String bankAccount; // 银行账号
     private Boolean cooperationStatus; // 合作状态（true-停用，false-启用），默认值为true
+    private Integer num; // 查询数量
+    private Integer page; // 查询页数
     private Timestamp createTime; // 创建时间，默认值为CURRENT_TIMESTAMP
     private Timestamp updateTime; // 更新时间，默认值为CURRENT_TIMESTAMP，并在更新时自动更新
 }

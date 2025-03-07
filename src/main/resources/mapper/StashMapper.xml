@@ -9,7 +9,9 @@
         <result column="stashAddress" property="stashAddress"/>
         <result column="storageTemperature" property="storageTemperature"/>
         <result column="stashArea" property="stashArea"/>
-        <result column="managerId" property="managerId"/>
+        <result column="managerName" property="managerName"/>
+        <result column="num" property="num"/>
+        <result column="page" property="page"/>
     </resultMap>
 
     <!-- 根据stashId查询 -->
@@ -17,7 +19,12 @@
         SELECT * FROM tb_stash
     </select>
 
-    <select id="selectStashById" parameterType="com.start.bike.entity.Stash" resultMap="stash_result">
+    <!-- 正确写法 -->
+    <select id="selectAllStash" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
+        SELECT * FROM tb_stash LIMIT ${(page-1)*num}, ${num}
+    </select>
+
+    <select id="selectStashById" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
         SELECT * FROM tb_stash WHERE 1=1
         <if test="stashName != null">
             AND stashName = #{stashName}
@@ -38,7 +45,7 @@
             stashAddress,
             storageTemperature,
             stashArea,
-            managerId,
+            managerName,
             createTime,
             updateTime
         ) VALUES (
@@ -46,7 +53,7 @@
                      #{stashAddress},
                      #{storageTemperature},
                      #{stashArea},
-                     #{managerId},
+                     #{managerName},
                         NOW(),
                   NOW()
                  )
@@ -60,7 +67,7 @@
             <if test="stashAddress != null">stashAddress = #{stashAddress},</if>
             <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
             <if test="stashArea != null">stashArea = #{stashArea},</if>
-            <if test="managerId != null">managerId = #{managerId},</if>
+            <if test="managerId != null">managerName = #{managerName},</if>
             updateTime = NOW()
         </set>
         WHERE stashId = #{stashId}

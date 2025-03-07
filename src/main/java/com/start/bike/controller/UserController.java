@@ -89,7 +89,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/update")
+    @PostMapping("/updateUser")
     public  ResponseEntity<Map<String, Object>> update(@RequestBody User user) {
         Map<String, Object> body = new HashMap<>();
         // 更新密码
@@ -113,7 +113,7 @@ public class UserController {
         }
     }
 
-    @PostMapping("/delete")
+    @PostMapping("/deleteUser")
     public ResponseEntity<Map<String, Object>> delete(@RequestBody User user) {
         Map<String, Object> body = new HashMap<>();
         try {
