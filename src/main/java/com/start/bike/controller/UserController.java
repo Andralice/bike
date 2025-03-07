@@ -72,7 +72,7 @@ public class UserController {
                 String refreshToken = jwtUtil.generateToken(user.getUsername());
                 String token = jwtUtil.generateToken(user.getUsername());
                 body.put("success", "true");
-                body.put("token", token);
+                body.put("token", refreshToken);
                 // 返回 token 给前端
                 return ResponseEntity.ok(body);
             } else {
