@@ -27,78 +27,34 @@ public class SecurityConfig {
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors(cors -> cors.configurationSource(request -> {
-                    CorsConfiguration configuration = new CorsConfiguration();
-                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 更改为你的前端地址
-                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    configuration.setAllowedHeaders(Arrays.asList("*"));
-                    configuration.setAllowCredentials(true);
-                    return configuration;
-                }))
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/User/login").permitAll()
-                .antMatchers().permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                .accessDeniedHandler((request, response, accessDeniedException) ->
-                        response.sendError(HttpStatus.FORBIDDEN.value(), "Access Denied"));
-
-        // 其他代码...
-        return http.build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        manager.createUser(User.withUsername("user")
-                .password(passwordEncoder.encode("password"))
-                .roles("USER")
-                .build());
-        return manager;
-    }
-}
-//@Bean
-//public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//    http
-//            .cors(cors -> cors.configurationSource(request -> {
-//                CorsConfiguration configuration = new CorsConfiguration();
-//                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 更改为你的前端地址
-//                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-//                configuration.setAllowedHeaders(Arrays.asList("*"));
-//                configuration.setAllowCredentials(true);
-//                return configuration;
-//            }))
-//            .csrf().disable()
-//            .authorizeRequests()
-//            .anyRequest().permitAll() // 允许所有请求通过
-//            .and()
-//            .sessionManagement()
-//            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//            .and()
-//            .exceptionHandling()
-//            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-//            .accessDeniedHandler((request, response, accessDeniedException) ->
-//                    response.sendError(HttpStatus.FORBIDDEN.value(), "Access Denied"));
+//    @Bean
+//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .cors(cors -> cors.configurationSource(request -> {
+//                    CorsConfiguration configuration = new CorsConfiguration();
+//                    configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 更改为你的前端地址
+//                    configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+//                    configuration.setAllowedHeaders(Arrays.asList("*"));
+//                    configuration.setAllowCredentials(true);
+//                    return configuration;
+//                }))
+//                .csrf().disable()
+//                .authorizeRequests()
+//                .antMatchers("/User/login").permitAll()
+//                .antMatchers().permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .sessionManagement()
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .and()
+//                .exceptionHandling()
+//                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+//                .accessDeniedHandler((request, response, accessDeniedException) ->
+//                        response.sendError(HttpStatus.FORBIDDEN.value(), "Access Denied"));
 //
-//    // 移除或禁用 JWT 请求过滤器
-//    http.addFilterBefore(jwtRequestFilter, BasicAuthenticationFilter.class);
-//
-//    return http.build();
-//}
+//        // 其他代码...
+//        return http.build();
+//    }
 //
 //    @Bean
 //    public PasswordEncoder passwordEncoder() {
@@ -115,3 +71,47 @@ public class SecurityConfig {
 //        return manager;
 //    }
 //}
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+            .cors(cors -> cors.configurationSource(request -> {
+                CorsConfiguration configuration = new CorsConfiguration();
+                configuration.setAllowedOrigins(Arrays.asList("http://localhost:5173")); // 更改为你的前端地址
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+                configuration.setAllowedHeaders(Arrays.asList("*"));
+                configuration.setAllowCredentials(true);
+                return configuration;
+            }))
+            .csrf().disable()
+            .authorizeRequests()
+            .anyRequest().permitAll() // 允许所有请求通过
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .exceptionHandling()
+            .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+            .accessDeniedHandler((request, response, accessDeniedException) ->
+                    response.sendError(HttpStatus.FORBIDDEN.value(), "Access Denied"));
+
+    // 移除或禁用 JWT 请求过滤器
+    http.addFilterBefore(jwtRequestFilter, BasicAuthenticationFilter.class);
+
+    return http.build();
+}
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+        manager.createUser(User.withUsername("user")
+                .password(passwordEncoder.encode("password"))
+                .roles("USER")
+                .build());
+        return manager;
+    }
+}
