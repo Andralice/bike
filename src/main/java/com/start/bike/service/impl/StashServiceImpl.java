@@ -6,6 +6,8 @@ import com.start.bike.mapper.StashMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StashServiceImpl implements StashService {
 
@@ -19,6 +21,11 @@ public class StashServiceImpl implements StashService {
     @Override
     public Stash selectStashById(Stash stash) {
         return stashMapper.selectStashById(stash);
+    }
+
+    @Override
+    public List<Stash> selectAllStash(Stash stash) {
+        return stashMapper.selectAllStash(stash);
     }
 
     @Override

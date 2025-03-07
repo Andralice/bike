@@ -10,6 +10,8 @@
         <result property="stashId" column="stashId"/>
         <result property="supplierId" column="supplierId"/>
         <result property="quantity" column="quantity"/>
+        <result column="num" property="num"/>
+        <result column="page" property="page"/>
     </resultMap>
 
     <!-- 查询库存信息 -->
@@ -26,6 +28,10 @@
         <if test="inventoryId != null">
             AND inventoryId = #{inventoryId}
         </if>
+    </select>
+
+    <select id="selectAllInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
+        SELECT * FROM tb_inventory LIMIT ${(page-1)*num}, ${num}
     </select>
 
     <!-- 插入库存信息 -->

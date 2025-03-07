@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -35,7 +36,24 @@ public class StashController {
         }
     }
 
-    @PostMapping("/insertStash")
+    @PostMapping("/selectAllStash")
+    public ResponseEntity<Map<String, Object>> selectAllStash(@RequestBody Stash stash){
+        Map<String,Object> body = new HashMap<>();
+        try {
+            List<Stash> result = stashService.selectAllStash(stash);
+            body.put("success", "true");
+            body.put("message", "查询成功");
+            body.put("result", result);
+            return ResponseEntity.ok(body);
+        } catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", "仓库查询失败，请稍后重试");
+            body.put("error",e.getMessage() );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
+
+    @PostMapping("/createStash")
     public ResponseEntity<Map<String, Object>>  insertStash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {

@@ -1,6 +1,7 @@
 package com.start.bike.controller;
 
 import com.start.bike.entity.Inventory;
+import com.start.bike.entity.Stash;
 import com.start.bike.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -43,6 +45,23 @@ public class InventoryController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "库存查询失败，请稍后重试");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
+
+    @RequestMapping("/selectAllInventory")
+    public ResponseEntity<Map<String, Object>> selectAllInventory(@RequestBody Inventory inventory) {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            List<Inventory> result = inventoryService.selectAllInventory(inventory);
+            body.put("success", "true");
+            body.put("message", "查询成功");
+            body.put("result", result);
+            return ResponseEntity.ok(body);
+        } catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", "仓库查询失败，请稍后重试");
+            body.put("error",e.getMessage() );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }

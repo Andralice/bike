@@ -13,6 +13,8 @@ public class User {
     private String telephone; // 电话号码
     private String workPlace; // 工作地点
     private String role; // 角色（如：管理员、普通用户等）
+    private Integer num; // 查询数量
+    private Integer page; // 查询页数
     private Timestamp createTime; // 创建时间
     private Timestamp updateTime; // 更新时间
 }
