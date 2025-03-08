@@ -6,21 +6,21 @@
 <mapper namespace="com.start.bike.mapper.InventoryMapper">
     <resultMap id="inventory_result" type="com.start.bike.entity.Inventory">
         <result property="inventoryId" column="inventoryId"/>
-        <result property="productId" column="productId"/>
-        <result property="stashId" column="stashId"/>
-        <result property="supplierId" column="supplierId"/>
+        <result property="productName" column="productName"/>
+        <result property="stashName" column="stashName"/>
+        <result property="supplierName" column="supplierName"/>
         <result property="quantity" column="quantity"/>
         <result column="num" property="num"/>
         <result column="page" property="page"/>
     </resultMap>
 
     <!-- 查询库存信息 -->
-    <select id="selectInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
+    <select id="selectInventoryById" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
         SELECT
         inventoryId,
-        productId,
-        stashId,
-        supplierId,
+        productName,
+        stashName,
+        supplierName,
         quantity,
         lastStockTime
         FROM tb_inventory
@@ -37,15 +37,15 @@
     <!-- 插入库存信息 -->
     <insert id="insertInventory" parameterType="com.start.bike.entity.Inventory">
         INSERT INTO tb_inventory (
-            productId,
-            stashId,
-            supplierId,
+            productName,
+            stashName,
+            supplierName,
             quantity,
             lastStockTime
         ) VALUES (
-                     #{productId},
-                     #{stashId},
-                     #{supplierId},
+                     #{productName},
+                     #{stashName},
+                     #{supplierName},
                      #{quantity},
                      NOW()
                  )
@@ -55,9 +55,9 @@
     <update id="updateInventory" parameterType="com.start.bike.entity.Inventory">
         UPDATE tb_inventory
         <set>
-            <if test="productId != null">productId = #{productId},</if>
-            <if test="stashId != null">stashId = #{stashId},</if>
-            <if test="supplierId != null">supplierId = #{supplierId},</if>
+            <if test="productName != null">productName = #{productName},</if>
+            <if test="stashName != null">stashName = #{stashName},</if>
+            <if test="supplierName != null">supplierName = #{supplierName},</if>
             <if test="quantity != null">quantity = #{quantity},</if>
             lastStockTime = NOW()
         </set>
@@ -65,7 +65,7 @@
     </update>
 
     <!-- 删除库存信息 -->
-    <delete id="deleteInventory" parameterType="com.start.bike.entity.Inventory">
+    <delete id="deleteInventoryById" parameterType="com.start.bike.entity.Inventory">
         DELETE FROM tb_inventory
         WHERE inventoryId = #{inventoryId}
     </delete>

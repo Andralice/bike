@@ -13,8 +13,8 @@ public class InventoryServiceImpl implements InventoryService {
     @Autowired
     private InventoryMapper inventoryMapper;
     @Override
-    public Inventory selectInventory(Inventory inventory) {
-        return inventoryMapper.selectInventory(inventory);
+    public Inventory selectInventoryById(Integer inventoryId) {
+        return inventoryMapper.selectInventoryById(inventoryId);
     }
 
     @Override
@@ -33,8 +33,8 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public Boolean deleteInventory(Inventory inventory) {
-        int result = inventoryMapper.deleteInventory(inventory);
+    public Boolean deleteInventoryById(Integer inventoryId) {
+        int result = inventoryMapper.deleteInventoryById(inventoryId);
         return result > 0;
     }
 }

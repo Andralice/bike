@@ -19,8 +19,8 @@ public class StashServiceImpl implements StashService {
     }
 
     @Override
-    public Stash selectStashById(Stash stash) {
-        return stashMapper.selectStashById(stash);
+    public Stash selectStashById(Integer stashId) {
+        return stashMapper.selectStashById(stashId);
     }
 
     @Override
@@ -44,8 +44,8 @@ public class StashServiceImpl implements StashService {
     }
 
     @Override
-    public Boolean deleteStash(Stash stash) {
-        int result = stashMapper.deleteStash(stash);
+    public Boolean deleteStashById(Integer stashId) {
+        int result = stashMapper.deleteStashById(stashId);
         return result > 0;
     }
 }

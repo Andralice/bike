@@ -11,9 +11,9 @@ public class SuppliersServiceImpl implements SuppliersService {
     @Autowired
     private SuppliersMapper suppliersMapper;
     @Override
-    public Suppliers selectSuppliers(Suppliers suppliers)
+    public Suppliers selectSuppliersById(Integer suppliersId)
     {
-        return suppliersMapper.selectSuppliers(suppliers);
+        return suppliersMapper.selectSuppliersById(suppliersId);
     }
     @Override
     public void insertSuppliers(Suppliers suppliers)
@@ -26,8 +26,8 @@ public class SuppliersServiceImpl implements SuppliersService {
         suppliersMapper.updateSuppliers(suppliers);
     }
     @Override
-    public Boolean deleteSuppliers(Suppliers suppliers) {
-        int result = suppliersMapper.deleteSuppliers(suppliers);
+    public Boolean deleteSuppliersById(Integer suppliersId) {
+        int result = suppliersMapper.deleteSuppliersById(suppliersId);
         return result > 0;
     }
 }

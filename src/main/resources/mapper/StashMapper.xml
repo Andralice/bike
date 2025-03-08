@@ -9,7 +9,7 @@
         <result column="stashAddress" property="stashAddress"/>
         <result column="storageTemperature" property="storageTemperature"/>
         <result column="stashArea" property="stashArea"/>
-        <result column="managerName" property="managerName"/>
+        <result column="adminName" property="adminName"/>
         <result column="num" property="num"/>
         <result column="page" property="page"/>
     </resultMap>
@@ -26,9 +26,6 @@
 
     <select id="selectStashById" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
         SELECT * FROM tb_stash WHERE 1=1
-        <if test="stashName != null">
-            AND stashName = #{stashName}
-        </if>
         <if test="stashId != null">
             AND stashId = #{stashId}
         </if>
@@ -45,7 +42,7 @@
             stashAddress,
             storageTemperature,
             stashArea,
-            managerName,
+            adminName,
             createTime,
             updateTime
         ) VALUES (
@@ -53,7 +50,7 @@
                      #{stashAddress},
                      #{storageTemperature},
                      #{stashArea},
-                     #{managerName},
+                     #{adminName},
                         NOW(),
                   NOW()
                  )
@@ -67,14 +64,14 @@
             <if test="stashAddress != null">stashAddress = #{stashAddress},</if>
             <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
             <if test="stashArea != null">stashArea = #{stashArea},</if>
-            <if test="managerId != null">managerName = #{managerName},</if>
+            <if test="adminName != null">adminName = #{adminName},</if>
             updateTime = NOW()
         </set>
         WHERE stashId = #{stashId}
     </update>
 
     <!-- 根据stashId删除 -->
-    <delete id="deleteStash" parameterType="Integer">
+    <delete id="deleteStashById" parameterType="Integer">
         DELETE FROM tb_stash WHERE stashId = #{stashId}
     </delete>
 </mapper>

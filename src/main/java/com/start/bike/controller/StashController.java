@@ -5,10 +5,7 @@ import com.start.bike.service.StashService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,18 +17,25 @@ public class StashController {
     @Autowired
     private StashService stashService ;
 
-    @PostMapping("/selectStash")
-    public ResponseEntity<Map<String, Object>> stash(@RequestBody Stash stash){
-        Map<String,Object> body = new HashMap<>();
+    @PostMapping("/selectStashById/{stashId}")
+    public ResponseEntity<Map<String, Object>> selectStashById(@PathVariable  Integer stashId) {
+        Map<String, Object> body = new HashMap<>();
         try {
-            Stash result = stashService.selectStashById(stash);
-            body.put("success", "true");
-            body.put("message", "查询成功");
-            body.put("result", result);
-            return ResponseEntity.ok(body);
+            Stash result = stashService.selectStashById(stashId);
+            if (result != null) {
+                body.put("success", "true");
+                body.put("message", "查询成功");
+                body.put("result", result);
+                return ResponseEntity.ok(body);
+            } else {
+                body.put("success", "false");
+                body.put("message", "未找到对应的仓库");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+            }
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "仓库查询失败，请稍后重试");
+            body.put("error",e.getMessage() );
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -64,7 +68,7 @@ public class StashController {
             }
             stashService.insertStash(stash);
             // 返回新建仓库信息
-            Stash result = stashService.selectStashById(stash);
+            Stash result = stashService.selectStashById(stash.getStashId());
             body.put("success", "true");
             body.put("message", "仓库创建成功");
             body.put("result", result);
@@ -83,7 +87,7 @@ public class StashController {
         try {
             stashService.updateStash(stash);
             // 返回更新后的仓库信息
-            Stash result = stashService.selectStashById(stash);
+            Stash result = stashService.selectStashById(stash.getStashId());
             body.put("success", "true");
             body.put("message", "仓库更新成功");
             body.put("result", result);
@@ -97,11 +101,11 @@ public class StashController {
         }
     }
 
-    @PostMapping("/deleteStash")
-    public ResponseEntity<Map<String,Object>> deleteStash(@RequestBody Stash stash){
+    @PostMapping("/deleteStashById/{stashId}")
+    public ResponseEntity<Map<String,Object>> deleteStash(@PathVariable  Integer stashId){
         Map<String,Object> body = new HashMap<>();
         try {
-            boolean delete = stashService.deleteStash(stash);
+            boolean delete = stashService.deleteStashById(stashId);
             if(!delete){
                 body.put("success", "false");
                 body.put("message", "仓库删除失败");

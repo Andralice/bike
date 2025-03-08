@@ -5,6 +5,7 @@ import com.start.bike.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,11 +20,11 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @RequestMapping("/selectProduct")
-    public ResponseEntity<Map<String, Object>> selectProduct(@RequestBody Product product) {
+    @RequestMapping("/selectProductById/{productId}")
+    public ResponseEntity<Map<String, Object>> selectProduct(@PathVariable Integer productId) {
         Map<String, Object> body = new HashMap<>();
         try {
-            Product result = productService.selectProduct(product);
+            Product result = productService.selectProductById(productId);
             if (result == null) {
                 body.put("success", "false");
                 body.put("message", "商品不存在");
@@ -52,7 +53,7 @@ public class ProductController {
             }
 
             productService.insertProduct(product);
-            Product result = productService.selectProduct(product);
+            Product result = productService.selectProductById(product.getProductId());
             body.put("success", "true");
             body.put("message", "商品创建成功");
             body.put("result", result);
@@ -79,7 +80,7 @@ public class ProductController {
             productService.updateProduct(product);
             body.put("success", "true");
             body.put("message", "商品更新成功");
-            Product result = productService.selectProduct(product);
+            Product result = productService.selectProductById(product.getProductId());
             body.put("result", result);
 //            body.put("result", result);
             return ResponseEntity.ok(body);
@@ -91,18 +92,18 @@ public class ProductController {
         }
     }
 
-    @RequestMapping("/deleteProduct")
-    public ResponseEntity<Map<String, Object>> deleteProduct(@RequestBody Product product) {
+    @RequestMapping("/deleteProductById/{productId}")
+    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Integer productId) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必须校验ID存在
-            if (product.getProductId() == null) {
+            if (productId == null) {
                 body.put("success", "false");
                 body.put("message", "商品ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            boolean deleteResult = productService.deleteProduct(product);
+            boolean deleteResult = productService.deleteProductById(productId);
             if (!deleteResult) {
                 body.put("success", "false");
                 body.put("message", "商品不存在或删除失败");

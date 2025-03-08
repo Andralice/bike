@@ -11,8 +11,8 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductMapper productMapper;
     @Override
-    public Product selectProduct(Product product) {
-        return productMapper.selectProduct(product);
+    public Product selectProductById(Integer productId) {
+        return productMapper.selectProductById(productId);
     }
     @Override
     public void insertProduct(Product product) {
@@ -23,8 +23,8 @@ public class ProductServiceImpl implements ProductService {
         productMapper.updateProduct(product);
     }
     @Override
-    public Boolean deleteProduct(Product product) {
-        int result = productMapper.deleteProduct(product);
+    public Boolean deleteProductById(Integer productId) {
+        int result = productMapper.deleteProductById(productId);
         return result > 0;
     }
 

@@ -16,7 +16,7 @@
     </resultMap>
 
     <!-- Select Product by Primary Key -->
-    <select id="selectProduct" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
+    <select id="selectProductById" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
         SELECT
             productId,
             productName,
@@ -29,12 +29,7 @@
         FROM
             tb_product
         WHERE 1 = 1
-        <if test="productId != null">AND productId = #{productId}</if>
-        <if test="productName != null">AND productName = #{productName}</if>
-        <if test="category != null">AND category = #{category}</if>
-        <if test="supplierName != null">AND supplierName = #{supplierName}</if>
-        <if test="stashName != null">AND stashName = #{stashName}</if>
-        <if test="storageTemperature != null">AND storageTemperature = #{storageTemperature}</if>
+        <if test="productId != null"> AND productId = #{productId}</if>
     </select>
 
     <!-- Insert Product -->
@@ -73,7 +68,7 @@
     </update>
 
     <!-- Delete Product -->
-    <delete id="deleteProduct" parameterType="com.start.bike.entity.Product">
+    <delete id="deleteProductById" parameterType="com.start.bike.entity.Product">
         DELETE FROM tb_product
         WHERE productId = #{productId}
     </delete>

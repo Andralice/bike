@@ -12,7 +12,7 @@
     </resultMap>
 
     <!-- 查询供应商 -->
-    <select id="selectSuppliers" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
+    <select id="selectSuppliersById" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
         SELECT
         supplierId,
         supplierName,
@@ -27,24 +27,6 @@
         WHERE 1=1
         <if test="supplierId != null">
             AND supplierId = #{supplierId}
-        </if>
-        <if test="supplierName != null and supplierName != ''">
-            AND supplierName LIKE CONCAT('%', #{supplierName}, '%')
-        </if>
-        <if test="contactName != null and contactName != ''">
-            AND contactName LIKE CONCAT('%', #{contactName}, '%')
-        </if>
-        <if test="contactPhone != null and contactPhone != ''">
-            AND contactPhone = #{contactPhone}
-        </if>
-        <if test="address != null and address != ''">
-            AND address LIKE CONCAT('%', #{address}, '%')
-        </if>
-        <if test="bankAccount != null and bankAccount != ''">
-            AND bankAccount = #{bankAccount}
-        </if>
-        <if test="cooperationStatus != null">
-            AND cooperationStatus = #{cooperationStatus}
         </if>
     </select>
 
@@ -99,7 +81,7 @@
     </update>
 
     <!-- 删除供应商 -->
-    <delete id="deleteSuppliers" parameterType="com.start.bike.entity.Suppliers">
+    <delete id="deleteSuppliersById" parameterType="com.start.bike.entity.Suppliers">
         DELETE FROM tb_suppliers
         WHERE supplierId = #{supplierId}
     </delete>

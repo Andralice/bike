@@ -6,6 +6,7 @@ import com.start.bike.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,18 +22,18 @@ public class InventoryController {
     @Autowired
     private InventoryService inventoryService;
 
-    @RequestMapping("/selectInventory")
-    public ResponseEntity<Map<String, Object>> selectInventory(@RequestBody Inventory inventory) {
+    @RequestMapping("/selectInventoryById/{inventoryId}")
+    public ResponseEntity<Map<String, Object>> selectInventory(@PathVariable Integer inventoryId) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 参数校验示例
-            if (inventory.getInventoryId() == null) {
+            if (inventoryId == null) {
                 body.put("success", "false");
                 body.put("message", "库存ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            Inventory result = inventoryService.selectInventory(inventory);
+            Inventory result = inventoryService.selectInventoryById(inventoryId);
             if (result == null) {
                 body.put("success", "false");
                 body.put("message", "库存记录不存在");
@@ -71,12 +72,12 @@ public class InventoryController {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必填字段校验
-            if (inventory.getProductId() == null) {
+            if (inventory.getProductName() == null) {
                 body.put("success", "false");
                 body.put("message", "商品ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
-            if (inventory.getStashId() == null) {
+            if (inventory.getStashName() == null) {
                 body.put("success", "false");
                 body.put("message", "仓库ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
@@ -109,14 +110,9 @@ public class InventoryController {
             }
 
             inventoryService.updateInventory(inventory);
-//            if (result == null) {
-//                body.put("success", "false");
-//                body.put("message", "库存记录不存在");
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-//            }
             body.put("success", "true");
             body.put("message", "库存更新成功");
-            Inventory result = inventoryService.selectInventory(inventory);
+            Inventory result = inventoryService.selectInventoryById(inventory.getInventoryId());
             body.put("result", result);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
@@ -126,18 +122,18 @@ public class InventoryController {
         }
     }
 
-    @RequestMapping("/deleteInventory")
-    public ResponseEntity<Map<String, Object>> deleteInventory(@RequestBody Inventory inventory) {
+    @RequestMapping("/deleteInventoryById/{inventoryId}")
+    public ResponseEntity<Map<String, Object>> deleteInventoryById(@PathVariable Integer inventoryId) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必须校验ID存在
-            if (inventory.getInventoryId() == null) {
+            if (inventoryId == null) {
                 body.put("success", "false");
                 body.put("message", "库存ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
 
-            boolean deleteResult = inventoryService.deleteInventory(inventory);
+            boolean deleteResult = inventoryService.deleteInventoryById(inventoryId);
             if (!deleteResult) {
                 body.put("success", "false");
                 body.put("message", "库存记录不存在或删除失败");
