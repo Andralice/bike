@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,6 +38,21 @@ public class ProductController {
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "商品查询失败，请稍后重试");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
+
+    @RequestMapping("/selectAllProduct")
+    public ResponseEntity<Map<String, Object>> selectAllProduct(@RequestBody int page, int size) {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            List<Product> result = productService.selectAllProduct(page, size);
+            body.put("success", "true");
+            body.put("result", result);
+            return ResponseEntity.ok(body);
+        }catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }

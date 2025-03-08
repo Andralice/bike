@@ -6,6 +6,8 @@ import com.start.bike.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
@@ -13,6 +15,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product selectProductById(Integer productId) {
         return productMapper.selectProductById(productId);
+    }
+    @Override
+    public List<Product> selectAllProduct(int page, int Size) {
+        return productMapper.selectAllProduct(page, Size);
     }
     @Override
     public void insertProduct(Product product) {

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -19,6 +21,12 @@ public class UserServiceImpl implements UserService {
     public User selectLoginUser(User user) {
         return userMapper.selectLoginUser(user);
     }
+
+    @Override
+    public List<User> selectAllUsers(int page, int Size) {
+        return userMapper.selectAllUsers(page, Size);
+    }
+
 
     @Override
     public Boolean isUserExists(User user) {
@@ -40,8 +48,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean deleteUser(User user) {
-        int result = userMapper.deleteUser(user);
+    public Boolean deleteUserById(Integer userId) {
+        int result = userMapper.deleteUserById(userId);
         return result > 0;
     }
 }

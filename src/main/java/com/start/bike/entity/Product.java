@@ -11,8 +11,6 @@ public class Product {
     private String stashName; // 仓库编号
     private String storageTemperature; // 存储温度
     private String supplierName;       // 供应商名称
-    private Integer num; // 查询数量
-    private Integer page; // 查询页数
     private String remark;// 备注
     private Timestamp createTime;          // 创建时间
     private Timestamp updateTime;          // 更新时间

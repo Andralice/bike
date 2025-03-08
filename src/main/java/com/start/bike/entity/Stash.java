@@ -13,8 +13,6 @@ public class Stash {
     private String storageTemperature; // 存储温度
     private String stashArea; // 仓库面积
     private String managerName;// 管理员名称
-    private Integer num; // 查询数量
-    private Integer page; // 查询页数
     private String remark;// 备注
     private Timestamp createTime; // 创建时间
     private Timestamp updateTime; // 更新时间

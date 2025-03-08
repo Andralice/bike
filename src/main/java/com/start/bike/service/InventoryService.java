@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface InventoryService {
     Inventory selectInventoryById(Integer inventoryId);
-    List<Inventory> selectAllInventory(Inventory inventory);
+    List<Inventory> selectAllInventory(int page, int size);
     void insertInventory(Inventory inventory);
     void updateInventory(Inventory inventory);
     Boolean deleteInventoryById(Integer inventoryId);

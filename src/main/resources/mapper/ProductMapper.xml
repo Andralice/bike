@@ -32,6 +32,11 @@
         <if test="productId != null"> AND productId = #{productId}</if>
     </select>
 
+    <!-- 查询多条数据 -->
+    <select id="selectAllProduct" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
+        SELECT * FROM tb_product LIMIT ${(page-1)*size}, ${size}
+    </select>
+
     <!-- Insert Product -->
     <insert id="insertProduct" parameterType="com.start.bike.entity.Product">
         INSERT INTO tb_product (

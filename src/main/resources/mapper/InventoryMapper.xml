@@ -10,8 +10,6 @@
         <result property="stashName" column="stashName"/>
         <result property="supplierName" column="supplierName"/>
         <result property="quantity" column="quantity"/>
-        <result column="num" property="num"/>
-        <result column="page" property="page"/>
     </resultMap>
 
     <!-- 查询库存信息 -->
@@ -31,7 +29,7 @@
     </select>
 
     <select id="selectAllInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
-        SELECT * FROM tb_inventory LIMIT ${(page-1)*num}, ${num}
+        SELECT * FROM tb_inventory LIMIT ${(page-1)*size}, ${size}
     </select>
 
     <!-- 插入库存信息 -->

@@ -30,6 +30,12 @@
         </if>
     </select>
 
+    <!-- 查询多条数据 -->
+    <select id="selectAllSuppliers" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
+        SELECT * FROM tb_suppliers LIMIT ${(page-1)*size}, ${size}
+    </select>
+
+
     <!-- 插入供应商 -->
     <insert id="insertSuppliers" parameterType="com.start.bike.entity.Suppliers">
         INSERT INTO tb_suppliers (
@@ -86,36 +92,5 @@
         WHERE supplierId = #{supplierId}
     </delete>
 
-    <!-- 分页查询供应商信息 -->
-    <select id="selectSuppliersByPage" resultType="com.start.bike.entity.Suppliers">
-        SELECT
-        supplierId,
-        supplierName,
-        contactName,
-        contactPhone,
-        address,
-        bankAccount,
-        cooperationStatus,
-        createTime,
-        updateTime
-        FROM tb_suppliers
-        WHERE 1=1
-        <if test="suppliers.supplierName != null and suppliers.supplierName != ''">
-            AND supplierName LIKE CONCAT('%', #{suppliers.supplierName}, '%')
-        </if>
-        <if test="suppliers.contactName != null and suppliers.contactName != ''">
-            AND contactName LIKE CONCAT('%', #{suppliers.contactName}, '%')
-        </if>
-        <if test="suppliers.contactPhone != null and suppliers.contactPhone != ''">
-            AND contactPhone LIKE CONCAT('%', #{suppliers.contactPhone}, '%')
-        </if>
-        <if test="suppliers.address != null and suppliers.address != ''">
-            AND address LIKE CONCAT('%', #{suppliers.address}, '%')
-        </if>
-        <if test="suppliers.cooperationStatus != null">
-            AND cooperationStatus = #{suppliers.cooperationStatus}
-        </if>
-        ORDER BY supplierId ASC
-    </select>
 
 </mapper>

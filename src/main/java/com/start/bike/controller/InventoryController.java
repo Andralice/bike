@@ -51,10 +51,10 @@ public class InventoryController {
     }
 
     @RequestMapping("/selectAllInventory")
-    public ResponseEntity<Map<String, Object>> selectAllInventory(@RequestBody Inventory inventory) {
+    public ResponseEntity<Map<String, Object>> selectAllInventory(@RequestBody int page, int size) {
         Map<String, Object> body = new HashMap<>();
         try {
-            List<Inventory> result = inventoryService.selectAllInventory(inventory);
+            List<Inventory> result = inventoryService.selectAllInventory(page, size);
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);

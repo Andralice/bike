@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import com.start.bike.JwtUtil;
 import java.sql.Timestamp;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import com.start.bike.TokenResponse;
@@ -89,6 +90,21 @@ public class UserController {
         }
     }
 
+    @PostMapping("/selectAllUsers")
+    public ResponseEntity<Map<String, Object>> selectAllUsers(int page, int size) {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            List<User> result = userService.selectAllUsers(page, size);
+            body.put("success", "true");
+            body.put("result", result);
+            return ResponseEntity.ok(body);
+        }catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
+
     @PostMapping("/updateUser")
     public  ResponseEntity<Map<String, Object>> update(@RequestBody User user) {
         Map<String, Object> body = new HashMap<>();
@@ -113,12 +129,12 @@ public class UserController {
         }
     }
 
-    @PostMapping("/deleteUser")
-    public ResponseEntity<Map<String, Object>> delete(@RequestBody User user) {
+    @PostMapping("/deleteUser/{userId}")
+    public ResponseEntity<Map<String, Object>> delete(@PathVariable Integer userId) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 1. 参数校验（根据业务需求添加）
-            if (user.getUserId() == null) {
+            if (userId == null) {
                 body.put("success", "false");
                 body.put("message", "用户ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -126,7 +142,7 @@ public class UserController {
             }
 
             // 2. 执行删除操作
-            boolean deleteResult = userService.deleteUser(user);
+            boolean deleteResult = userService.deleteUserById(userId);
 
             if (!deleteResult) {
                 body.put("success", "false");

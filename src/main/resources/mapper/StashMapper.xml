@@ -10,8 +10,6 @@
         <result column="storageTemperature" property="storageTemperature"/>
         <result column="stashArea" property="stashArea"/>
         <result column="adminName" property="adminName"/>
-        <result column="num" property="num"/>
-        <result column="page" property="page"/>
     </resultMap>
 
     <!-- 根据stashId查询 -->
@@ -21,7 +19,7 @@
 
     <!-- 正确写法 -->
     <select id="selectAllStash" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
-        SELECT * FROM tb_stash LIMIT ${(page-1)*num}, ${num}
+        SELECT * FROM tb_stash LIMIT ${(page-1)*size}, ${size}
     </select>
 
     <select id="selectStashById" resultType="com.start.bike.entity.Stash" resultMap="stash_result">

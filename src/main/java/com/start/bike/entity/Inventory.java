@@ -13,7 +13,5 @@ public class Inventory {
     private String type;
     private Integer quantity; // 剩余库存
     private String remark;// 备注
-    private Integer num; // 查询数量
-    private Integer page; // 查询页数
     private Timestamp lastStockTime;
 }

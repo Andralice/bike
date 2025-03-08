@@ -13,10 +13,7 @@ public class StashServiceImpl implements StashService {
 
     @Autowired
     private StashMapper stashMapper;
-    @Override
-    public Stash selectStash(Stash stash) {
-        return stashMapper.selectStash(stash);
-    }
+
 
     @Override
     public Stash selectStashById(Integer stashId) {
@@ -24,8 +21,8 @@ public class StashServiceImpl implements StashService {
     }
 
     @Override
-    public List<Stash> selectAllStash(Stash stash) {
-        return stashMapper.selectAllStash(stash);
+    public List<Stash> selectAllStash(int page, int size) {
+        return stashMapper.selectAllStash(page,size);
     }
 
     @Override

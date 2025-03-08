@@ -11,15 +11,18 @@
         <result column="position" property="position"/>
         <result column="workPlace" property="workPlace"/>
         <result column="telephone" property="telephone"/>
+        <result column="adminName" property="adminName"/>
         <result column="role" property="role"/>
     </resultMap>
 
     <select id="selectLoginUser" resultMap="user_result">
     SELECT userName ,password FROM tb_user WHERE userName = #{username} AND password = #{password}
 </select>
+    <!-- 查询多条数据 -->
     <select id="selectAllUser" resultMap="user_result">
-        SELECT * FROM tb_user
+        SELECT * FROM tb_user LIMIT ${(page-1)*size}, ${size}
     </select>
+
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
         SELECT password FROM tb_user WHERE username = #{username}
     </select>
@@ -29,8 +32,8 @@
 
     <!-- 用户注册插入 -->
     <insert id="insertUser" parameterType="com.start.bike.entity.User">
-        INSERT INTO tb_user (username, password, position, workPlace, telephone, role)
-        VALUES (#{username}, #{password}, #{position}, #{workPlace}, #{telephone}, #{role})
+        INSERT INTO tb_user (username, password, position, workPlace,adminName, telephone, role)
+        VALUES (#{username}, #{password}, #{position}, #{workPlace}, #{adminName},#{telephone}, #{role})
     </insert>
     <update id="updateUser">
         UPDATE tb_user
@@ -38,13 +41,14 @@
         <if test="password != null">password = #{password},</if>
         <if test="position != null">position = #{position},</if>
         <if test="telephone != null">telephone = #{telephone},</if>
+        <if test="adminName != null">adminName = #{adminName},</if>
         <if test="workPlace != null">workPlace = #{workPlace},</if>
         <if test="role != null">role = #{role},</if>
             updateTime = NOW()
         WHERE
             userId = #{userId}
     </update>
-    <delete id="deleteUser">
+    <delete id="deleteUserById">
         DELETE FROM tb_user
         WHERE userId = #{userId}
     </delete>

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -36,6 +37,22 @@ public class SuppliersController {
             body.put("success", "false");
             body.put("message", "供应商查询失败，请稍后重试");
             body.put("error", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
+
+    @PostMapping("/selectAllSuppliers")
+    public ResponseEntity<Map<String, Object>> selectAllSuppliers(@RequestBody int page, int size) {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            List<Suppliers> result = suppliersService.selectAllSuppliers(page,size);
+            body.put("success", "true");
+            body.put("message", "查询成功");
+            body.put("result", result);
+            return ResponseEntity.ok(body);
+        }catch (Exception e){
+            body.put("success", "false");
+            body.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -117,20 +134,5 @@ public class SuppliersController {
             body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
-    }
-    /**
-     * 获取分页的供应商信息
-     *
-     * @param pageNum      当前页码（从1开始）
-     * @param pageSize     每页显示的数量
-     * @param suppliers    包含查询条件的实体对象
-     * @return 分页结果
-     */
-    @PostMapping("/getSuppliers")
-    public Page<Suppliers> getSuppliers(
-            @RequestParam(defaultValue = "1") int pageNum,
-            @RequestParam(defaultValue = "10") int pageSize,
-            @RequestBody Suppliers suppliers) {
-        return suppliersService.getSuppliersByPage(pageNum, pageSize, suppliers);
     }
 }

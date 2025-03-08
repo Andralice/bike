@@ -41,10 +41,10 @@ public class StashController {
     }
 
     @PostMapping("/selectAllStash")
-    public ResponseEntity<Map<String, Object>> selectAllStash(@RequestBody Stash stash){
+    public ResponseEntity<Map<String, Object>> selectAllStash(@RequestBody int page, int size){
         Map<String,Object> body = new HashMap<>();
         try {
-            List<Stash> result = stashService.selectAllStash(stash);
+            List<Stash> result = stashService.selectAllStash(page,size);
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);

@@ -18,8 +18,8 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> selectAllInventory(Inventory inventory) {
-        return inventoryMapper.selectAllInventory(inventory);
+    public List<Inventory> selectAllInventory(int page, int size) {
+        return inventoryMapper.selectAllInventory(page, size);
     }
 
     @Override
