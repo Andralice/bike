@@ -39,10 +39,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User selectUserByPassword(User user) {
-            return  userMapper.selectUserByPassword(user);
-    }
-    @Override
     public void updateUser(User user) {
         userMapper.updateUser(user);
     }
