@@ -1,5 +1,6 @@
 package com.start.bike.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.start.bike.entity.Suppliers;
 import com.start.bike.service.SuppliersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,5 +117,20 @@ public class SuppliersController {
             body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
+    }
+    /**
+     * 获取分页的供应商信息
+     *
+     * @param pageNum      当前页码（从1开始）
+     * @param pageSize     每页显示的数量
+     * @param suppliers    包含查询条件的实体对象
+     * @return 分页结果
+     */
+    @PostMapping("/getSuppliers")
+    public Page<Suppliers> getSuppliers(
+            @RequestParam(defaultValue = "1") int pageNum,
+            @RequestParam(defaultValue = "10") int pageSize,
+            @RequestBody Suppliers suppliers) {
+        return suppliersService.getSuppliersByPage(pageNum, pageSize, suppliers);
     }
 }
