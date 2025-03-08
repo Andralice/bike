@@ -1,4 +1,5 @@
 package com.start.bike.service.impl;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.start.bike.entity.Suppliers;
 import com.start.bike.service.SuppliersService;
 import com.start.bike.mapper.SuppliersMapper;
@@ -30,4 +31,13 @@ public class SuppliersServiceImpl implements SuppliersService {
         int result = suppliersMapper.deleteSuppliers(suppliers);
         return result > 0;
     }
-}
+
+    @Override
+    public Page<Suppliers> getSuppliersByPage(int pageNum, int pageSize, Suppliers suppliers) {
+        Page<Suppliers> page = new Page<>(pageNum, pageSize);
+        return suppliersMapper.selectSuppliersByPage(page,suppliers);
+    };
+    }
+
+
+

@@ -1,5 +1,7 @@
 package com.start.bike;
 
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
@@ -113,5 +115,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                 .roles("USER")
                 .build());
         return manager;
+    }
+    @Bean
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        // 设置数据库类型为 M
+        return new MybatisPlusInterceptor();
     }
 }
