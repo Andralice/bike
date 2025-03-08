@@ -1,6 +1,6 @@
 package com.start.bike.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.start.bike.entity.Page;
 import com.start.bike.entity.Suppliers;
 import com.start.bike.service.SuppliersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +42,10 @@ public class SuppliersController {
     }
 
     @PostMapping("/selectAllSuppliers")
-    public ResponseEntity<Map<String, Object>> selectAllSuppliers(@RequestBody int page, int size) {
+    public ResponseEntity<Map<String, Object>> selectAllSuppliers(@RequestBody Page data) {
         Map<String, Object> body = new HashMap<>();
+        int page = data.getPage();
+        int size = data.getSize();
         try {
             List<Suppliers> result = suppliersService.selectAllSuppliers(page,size);
             body.put("success", "true");
@@ -57,7 +59,7 @@ public class SuppliersController {
         }
     }
 
-    @PostMapping("/insertSuppliers")
+    @PostMapping("/createSuppliers")
     public ResponseEntity<Map<String, Object>> insertSuppliers(@RequestBody Suppliers suppliers) {
         Map<String, Object> body = new HashMap<>();
         try {
@@ -71,8 +73,6 @@ public class SuppliersController {
             suppliersService.insertSuppliers(suppliers);
             body.put("success", "true");
             body.put("message", "供应商创建成功");
-            Suppliers result = suppliersService.selectSuppliersById(suppliers.getSupplierId());
-            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");

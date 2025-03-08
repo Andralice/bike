@@ -1,5 +1,6 @@
 package com.start.bike.controller;
 
+import com.start.bike.entity.Page;
 import com.start.bike.entity.Product;
 import com.start.bike.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,10 @@ public class ProductController {
     }
 
     @RequestMapping("/selectAllProduct")
-    public ResponseEntity<Map<String, Object>> selectAllProduct(@RequestBody int page, int size) {
+    public ResponseEntity<Map<String, Object>> selectAllProduct(@RequestBody Page data) {
         Map<String, Object> body = new HashMap<>();
+        int page = data.getPage();
+        int size = data.getSize();
         try {
             List<Product> result = productService.selectAllProduct(page, size);
             body.put("success", "true");
@@ -57,7 +60,7 @@ public class ProductController {
         }
     }
 
-    @RequestMapping("/insertProduct")
+    @RequestMapping("/createProduct")
     public ResponseEntity<Map<String, Object>> insertProduct(@RequestBody Product product) {
         Map<String, Object> body = new HashMap<>();
         try {
@@ -69,10 +72,8 @@ public class ProductController {
             }
 
             productService.insertProduct(product);
-            Product result = productService.selectProductById(product.getProductId());
             body.put("success", "true");
             body.put("message", "商品创建成功");
-            body.put("result", result);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");

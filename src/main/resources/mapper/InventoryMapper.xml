@@ -8,6 +8,7 @@
         <result property="inventoryId" column="inventoryId"/>
         <result property="productName" column="productName"/>
         <result property="stashName" column="stashName"/>
+        <result property="type" column="type"/>
         <result property="supplierName" column="supplierName"/>
         <result property="quantity" column="quantity"/>
     </resultMap>
@@ -19,6 +20,7 @@
         productName,
         stashName,
         supplierName,
+        type,
         quantity,
         lastStockTime
         FROM tb_inventory
@@ -38,12 +40,14 @@
             productName,
             stashName,
             supplierName,
+            type,
             quantity,
             lastStockTime
         ) VALUES (
                      #{productName},
                      #{stashName},
                      #{supplierName},
+                  #{type},
                      #{quantity},
                      NOW()
                  )

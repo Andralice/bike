@@ -1,5 +1,6 @@
 package com.start.bike.controller;
 
+import com.start.bike.entity.Page;
 import com.start.bike.entity.User;
 import com.start.bike.util.StringValidator;
 import com.start.bike.service.UserService;
@@ -91,8 +92,10 @@ public class UserController {
     }
 
     @PostMapping("/selectAllUsers")
-    public ResponseEntity<Map<String, Object>> selectAllUsers(int page, int size) {
+    public ResponseEntity<Map<String, Object>> selectAllUsers(Page data) {
         Map<String, Object> body = new HashMap<>();
+        int page = data.getPage();
+        int size = data.getSize();
         try {
             List<User> result = userService.selectAllUsers(page, size);
             body.put("success", "true");

@@ -1,5 +1,6 @@
 package com.start.bike.controller;
 
+import com.start.bike.entity.Page;
 import com.start.bike.entity.Stash;
 import com.start.bike.service.StashService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,10 @@ public class StashController {
     }
 
     @PostMapping("/selectAllStash")
-    public ResponseEntity<Map<String, Object>> selectAllStash(@RequestBody int page, int size){
+    public ResponseEntity<Map<String, Object>> selectAllStash(@RequestBody Page data){
         Map<String,Object> body = new HashMap<>();
+        int page = data.getPage();
+        int size = data.getSize();
         try {
             List<Stash> result = stashService.selectAllStash(page,size);
             body.put("success", "true");

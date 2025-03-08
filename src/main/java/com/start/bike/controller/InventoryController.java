@@ -1,6 +1,7 @@
 package com.start.bike.controller;
 
 import com.start.bike.entity.Inventory;
+import com.start.bike.entity.Page;
 import com.start.bike.entity.Stash;
 import com.start.bike.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,8 +52,10 @@ public class InventoryController {
     }
 
     @RequestMapping("/selectAllInventory")
-    public ResponseEntity<Map<String, Object>> selectAllInventory(@RequestBody int page, int size) {
+    public ResponseEntity<Map<String, Object>> selectAllInventory(@RequestBody Page data) {
         Map<String, Object> body = new HashMap<>();
+        int page = data.getPage();
+        int size = data.getSize();
         try {
             List<Inventory> result = inventoryService.selectAllInventory(page, size);
             body.put("success", "true");
@@ -67,7 +70,7 @@ public class InventoryController {
         }
     }
 
-    @RequestMapping("/insertInventory")
+    @RequestMapping("/createInventory")
     public ResponseEntity<Map<String, Object>> insertInventory(@RequestBody Inventory inventory) {
         Map<String, Object> body = new HashMap<>();
         try {
