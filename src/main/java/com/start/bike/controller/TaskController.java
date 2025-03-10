@@ -1,9 +1,11 @@
 package com.start.bike.controller;
 
 
+import com.start.bike.context.ThreadLocalContext;
 import com.start.bike.entity.Page;
 import com.start.bike.entity.Task;
 import com.start.bike.service.TaskService;
+import com.start.bike.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ import java.util.Map;
 public class TaskController {
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private LogUtil logUtil;
 
     @PostMapping("/selectTaskById/{taskId}")
     public ResponseEntity<Map<String, Object>> selectTaskById(@PathVariable int taskId) {
@@ -62,6 +67,13 @@ public class TaskController {
         Map<String, Object> body = new HashMap<>();
         try {
             taskService.insertTask(task);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+
+            Task updateData = taskService.selectTaskCreate(task);
+            // 记录操作日志
+            logUtil.logOperation("create","0", executedSql, updateData, "System");
+
             body.put("success", "true");
             body.put("message","任务创建成功");
             return ResponseEntity.ok(body);
@@ -73,19 +85,20 @@ public class TaskController {
     }
 
     @PostMapping("/updateTask")
-    public ResponseEntity<Map<String, Object>> updateTask(@RequestBody Task tasks) {
+    public ResponseEntity<Map<String, Object>> updateTask(@RequestBody Task task) {
         Map<String, Object> body = new HashMap<>();
         try {
-            Task task = taskService.selectTaskById(tasks.getTaskId());
-            if (task == null) {
-                body.put("success", "false");
-                body.put("message", "任务不存在");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
-            taskService.updateTask(tasks);
-            Task result = taskService.selectTaskById(tasks.getTaskId());
+            Task hisData = taskService.selectTaskById(task.getTaskId());
+            taskService.updateTask(task);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+
+            Task updateData = taskService.selectTaskById(task.getTaskId());
+            // 记录操作日志
+            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+
             body.put("success", "true");
-            body.put("result", result);
+            body.put("result", updateData);
             return ResponseEntity.ok(body);
         }catch (Exception e){
             body.put("success", "false");
@@ -98,13 +111,12 @@ public class TaskController {
     public ResponseEntity<Map<String, Object>> deleteTaskById(@PathVariable int taskId){
         Map<String, Object> body = new HashMap<>();
         try {
-            Task result = taskService.selectTaskById(taskId);
-            if (result == null){
-                body.put("success", "false");
-                body.put("message", "任务不存在");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
+            Task hisData = taskService.selectTaskById(taskId);
             taskService.deleteTaskById(taskId);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            // 记录操作日志
+            logUtil.logOperation("del",hisData, executedSql, '0', "System");
             body.put("success", "true");
             body.put("message", "任务删除成功");
             return ResponseEntity.ok(body);

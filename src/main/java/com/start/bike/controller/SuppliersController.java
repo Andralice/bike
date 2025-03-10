@@ -1,8 +1,10 @@
 package com.start.bike.controller;
 
+import com.start.bike.context.ThreadLocalContext;
 import com.start.bike.entity.Page;
 import com.start.bike.entity.Suppliers;
 import com.start.bike.service.SuppliersService;
+import com.start.bike.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ public class SuppliersController {
 
     @Autowired
     private SuppliersService suppliersService;
+
+    @Autowired
+    private LogUtil logUtil;
 
     @PostMapping("/selectSuppliersById/{suppliersId}")
     public ResponseEntity<Map<String, Object>> selectSuppliers(@PathVariable Integer suppliersId) {
@@ -71,6 +76,14 @@ public class SuppliersController {
             }
 
             suppliersService.insertSuppliers(suppliers);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+
+            Suppliers updateData = suppliersService.selectSuppliersCreate(suppliers);
+
+            // 记录操作日志
+            logUtil.logOperation("create","0", executedSql, updateData, "System");
+
             body.put("success", "true");
             body.put("message", "供应商创建成功");
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
@@ -86,15 +99,16 @@ public class SuppliersController {
     public ResponseEntity<Map<String, Object>> updateSuppliers(@RequestBody Suppliers suppliers) {
         Map<String, Object> body = new HashMap<>();
         try {
-            Suppliers supplier = suppliersService.selectSuppliersById(suppliers.getSupplierId());
-            // 必须校验ID存在
-            if (supplier == null) {
-                body.put("success", "false");
-                body.put("message", "供应商不存在");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-            }
+            Suppliers hisData = suppliersService.selectSuppliersById(suppliers.getSupplierId());
 
             suppliersService.updateSuppliers(suppliers);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+
+            Suppliers updateData = suppliersService.selectSuppliersById(suppliers.getSupplierId());
+
+            // 记录操作日志
+            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
             body.put("success", "true");
             body.put("message", "供应商更新成功");
             Suppliers result = suppliersService.selectSuppliersById(suppliers.getSupplierId());
@@ -112,14 +126,14 @@ public class SuppliersController {
     public ResponseEntity<Map<String, Object>> deleteSuppliers(@PathVariable Integer suppliersId) {
         Map<String, Object> body = new HashMap<>();
         try {
-            // 必须校验ID存在
-            if (suppliersId == null) {
-                body.put("success", "false");
-                body.put("message", "供应商ID不能为空");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-            }
+            Suppliers hisData = suppliersService.selectSuppliersById(suppliersId);
 
             boolean deleteResult = suppliersService.deleteSuppliersById(suppliersId);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            // 记录操作日志
+            logUtil.logOperation("del",hisData, executedSql, "0", "System");
+
             if (!deleteResult) {
                 body.put("success", "false");
                 body.put("message", "供应商不存在或删除失败");

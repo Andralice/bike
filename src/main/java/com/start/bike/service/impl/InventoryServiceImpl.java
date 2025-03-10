@@ -16,6 +16,10 @@ public class InventoryServiceImpl implements InventoryService {
     public Inventory selectInventoryById(Integer inventoryId) {
         return inventoryMapper.selectInventoryById(inventoryId);
     }
+    @Override
+    public Inventory selectInventoryCreate(Inventory inventory) {
+        return inventoryMapper.selectInventoryCreate(inventory);
+    }
 
     @Override
     public List<Inventory> selectAllInventory(int page, int size) {

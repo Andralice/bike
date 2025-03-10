@@ -1,8 +1,11 @@
 package com.start.bike.controller;
 
+import com.start.bike.context.ThreadLocalContext;
 import com.start.bike.entity.Page;
+import com.start.bike.entity.Product;
 import com.start.bike.entity.Stash;
 import com.start.bike.service.StashService;
+import com.start.bike.util.LogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +20,9 @@ import java.util.Map;
 public class StashController {
     @Autowired
     private StashService stashService ;
+
+    @Autowired
+    private LogUtil logUtil;
 
     @PostMapping("/selectStashById/{stashId}")
     public ResponseEntity<Map<String, Object>> selectStashById(@PathVariable  Integer stashId) {
@@ -71,10 +77,15 @@ public class StashController {
             }
             stashService.insertStash(stash);
             // 返回新建仓库信息
-            Stash result = stashService.selectStashById(stash.getStashId());
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            // 获取创建数据
+            Stash updateData = stashService.selectStashCreate(stash);
+            // 记录操作日志
+            logUtil.logOperation("create","0", executedSql, updateData, "System");
             body.put("success", "true");
             body.put("message", "仓库创建成功");
-            body.put("result", result);
+            body.put("result", updateData);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
@@ -88,12 +99,18 @@ public class StashController {
     public ResponseEntity<Map<String,Object>> updateStash(@RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
         try {
+            Stash hisData = stashService.selectStashById(stash.getStashId());
             stashService.updateStash(stash);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 返回更新后的仓库信息
-            Stash result = stashService.selectStashById(stash.getStashId());
+            Stash updateData = stashService.selectStashById(stash.getStashId());
+            // 记录操作日志
+            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+
             body.put("success", "true");
             body.put("message", "仓库更新成功");
-            body.put("result", result);
+            body.put("result", updateData);
             return ResponseEntity.ok(body);
         }
         catch (Exception e) {
@@ -108,7 +125,12 @@ public class StashController {
     public ResponseEntity<Map<String,Object>> deleteStash(@PathVariable  Integer stashId){
         Map<String,Object> body = new HashMap<>();
         try {
+            Stash hisData = stashService.selectStashById(stashId);
             boolean delete = stashService.deleteStashById(stashId);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            // 记录操作日志
+            logUtil.logOperation("del",hisData, executedSql, "0", "System");
             if(!delete){
                 body.put("success", "false");
                 body.put("message", "仓库删除失败");

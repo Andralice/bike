@@ -15,9 +15,12 @@ public class SuppliersServiceImpl implements SuppliersService {
     private SuppliersMapper suppliersMapper;
 
     @Override
-    public Suppliers selectSuppliersById(Integer suppliersId)
-    {
+    public Suppliers selectSuppliersById(Integer suppliersId) {
         return suppliersMapper.selectSuppliersById(suppliersId);
+    }
+    @Override
+    public Suppliers selectSuppliersCreate(Suppliers suppliers) {
+        return suppliersMapper.selectSuppliersCreate(suppliers);
     }
     @Override
     public List<Suppliers> selectAllSuppliers(int page,int size){
@@ -25,14 +28,12 @@ public class SuppliersServiceImpl implements SuppliersService {
     }
 
     @Override
-    public void insertSuppliers(Suppliers suppliers)
-    {
+    public void insertSuppliers(Suppliers suppliers) {
         suppliersMapper.insertSuppliers(suppliers);
     }
 
     @Override
-    public void updateSuppliers(Suppliers suppliers)
-    {
+    public void updateSuppliers(Suppliers suppliers) {
         suppliersMapper.updateSuppliers(suppliers);
     }
 
@@ -42,7 +43,7 @@ public class SuppliersServiceImpl implements SuppliersService {
         return result > 0;
     }
 
-    }
+}
 
 
 

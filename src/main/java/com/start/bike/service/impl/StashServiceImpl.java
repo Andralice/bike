@@ -19,6 +19,10 @@ public class StashServiceImpl implements StashService {
     public Stash selectStashById(Integer stashId) {
         return stashMapper.selectStashById(stashId);
     }
+    @Override
+    public Stash selectStashCreate(Stash stash ) {
+        return stashMapper.selectStashCreate(stash);
+    }
 
     @Override
     public List<Stash> selectAllStash(int page, int size) {

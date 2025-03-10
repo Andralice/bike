@@ -30,6 +30,25 @@
         </if>
     </select>
 
+
+    <select id="selectInventoryCreate" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
+        SELECT
+        inventoryId,
+        productName,
+        stashName,
+        supplierName,
+        type,
+        quantity,
+        lastStockTime
+        FROM tb_inventory
+        WHERE 1=1
+        <if test="productName != null">
+            AND productName = #{productName}
+        </if>
+        ORDER BY lastStockTime DESC LIMIT 1
+    </select>
+
+
     <select id="selectAllInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
         SELECT * FROM tb_inventory LIMIT ${(page-1)*size}, ${size}
     </select>

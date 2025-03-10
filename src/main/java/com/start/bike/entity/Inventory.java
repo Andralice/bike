@@ -3,6 +3,7 @@ package com.start.bike.entity;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class Inventory {
@@ -13,6 +14,6 @@ public class Inventory {
     private String type; // 类型
     private String remark; // 备注
     private Integer quantity; // 数量
-    private Timestamp lastStockTime; // 最后入库时间
+    private LocalDateTime lastStockTime; // 最后入库时间
     private Byte isDeleted; // 是否删除（0-未删除，1-已删除）
 }

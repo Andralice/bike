@@ -30,6 +30,27 @@
         </if>
     </select>
 
+    <!-- 创建日志 -->
+    <select id="selectSuppliersCreate" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
+        SELECT
+        supplierId,
+        supplierName,
+        contactName,
+        contactPhone,
+        address,
+        bankAccount,
+        cooperationStatus,
+        createTime,
+        updateTime
+        FROM tb_suppliers
+        WHERE 1=1
+        <if test="supplierName != null">
+            AND supplierName = #{supplierName}
+        </if>
+        ORDER BY createTime DESC LIMIT 1
+    </select>
+
+
     <!-- 查询多条数据 -->
     <select id="selectAllSuppliers" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
         SELECT * FROM tb_suppliers LIMIT ${(page-1)*size}, ${size}

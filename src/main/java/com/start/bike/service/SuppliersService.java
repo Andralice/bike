@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface SuppliersService {
     Suppliers selectSuppliersById(Integer suppliersId);
+    Suppliers selectSuppliersCreate(Suppliers suppliers);
     List<Suppliers> selectAllSuppliers(int page, int size);
     void insertSuppliers(Suppliers suppliers);
     void updateSuppliers(Suppliers suppliers);

@@ -1,8 +1,8 @@
 package com.start.bike.controller;
 
+import com.start.bike.context.ThreadLocalContext;
 import com.start.bike.entity.Inventory;
 import com.start.bike.entity.Page;
-import com.start.bike.entity.Stash;
 import com.start.bike.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.start.bike.util.LogUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +23,9 @@ public class InventoryController {
 
     @Autowired
     private InventoryService inventoryService;
+
+    @Autowired
+    private LogUtil logUtil;
 
     @RequestMapping("/selectInventoryById/{inventoryId}")
     public ResponseEntity<Map<String, Object>> selectInventory(@PathVariable Integer inventoryId) {
@@ -88,15 +92,22 @@ public class InventoryController {
             if (inventory.getQuantity() == null) {
                 body.put("success", "false");
             }
-
             inventoryService.insertInventory(inventory);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            // 获取创建数据
+            Inventory updateData = inventoryService.selectInventoryCreate(inventory);
+            // 记录操作日志
+            logUtil.logOperation("create","0", executedSql, updateData, "System");
+
             body.put("success", "true");
             body.put("message", "库存记录创建成功");
+            body.put("result",updateData);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "库存创建失败，请稍后重试");
-            body.put("result", e.getMessage());
+            body.put("error", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
@@ -111,12 +122,17 @@ public class InventoryController {
                 body.put("message", "库存ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
-
+            Inventory hisData = inventoryService.selectInventoryById(inventory.getInventoryId());
             inventoryService.updateInventory(inventory);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            Inventory updateData = inventoryService.selectInventoryById(inventory.getInventoryId());
+            // 记录操作日志
+            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+
             body.put("success", "true");
             body.put("message", "库存更新成功");
-            Inventory result = inventoryService.selectInventoryById(inventory.getInventoryId());
-            body.put("result", result);
+            body.put("result", updateData);
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
@@ -129,14 +145,15 @@ public class InventoryController {
     public ResponseEntity<Map<String, Object>> deleteInventoryById(@PathVariable Integer inventoryId) {
         Map<String, Object> body = new HashMap<>();
         try {
-            // 必须校验ID存在
-            if (inventoryId == null) {
-                body.put("success", "false");
-                body.put("message", "库存ID不能为空");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-            }
+
+            Inventory hisData = inventoryService.selectInventoryById(inventoryId);
 
             boolean deleteResult = inventoryService.deleteInventoryById(inventoryId);
+            // 获取最后执行的 SQL 语句
+            String executedSql = ThreadLocalContext.getLastExecutedSql();
+            // 记录操作日志
+            logUtil.logOperation("del",hisData, executedSql, "0", "System");
+
             if (!deleteResult) {
                 body.put("success", "false");
                 body.put("message", "库存记录不存在或删除失败");

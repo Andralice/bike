@@ -18,11 +18,41 @@
         SELECT * FROM tb_task LIMIT ${(page-1)*size}, ${size}
     </select>
 
+<!--    ID查询数据-->
     <select id="selectTaskById" resultType="com.start.bike.entity.Task" resultMap="task_result">
-        SELECT * FROM tb_task WHERE 1=1
+        SELECT
+        taskId,
+        taskName,
+        taskDescription,
+        taskStatus,
+        taskType,
+        taskAdminName,
+        taskUserName,
+        createTime,
+        updateTime
+        FROM tb_task WHERE 1=1
         <if test="taskId != null">
             AND taskId = #{taskId}
         </if>
+    </select>
+
+<!--创建日志数据-->
+    <select id="selectTaskCreate" resultType="com.start.bike.entity.Task" resultMap="task_result">
+        SELECT
+        taskId,
+        taskName,
+        taskDescription,
+        taskStatus,
+        taskType,
+        taskAdminName,
+        taskUserName,
+        createTime,
+        updateTime
+        FROM tb_task WHERE 1=1
+        <if test="taskName != null">
+            AND taskName = #{taskName}
+        </if>
+        ORDER BY createTime DESC LIMIT 1
     </select>
 
     <!-- 插入仓库信息 -->

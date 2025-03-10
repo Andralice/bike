@@ -2,6 +2,7 @@ package com.start.bike.entity;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
 public class Stash {
@@ -12,8 +13,8 @@ public class Stash {
     private String stashArea; // 仓库面积
     private String adminName; // 管理员名称
     private String remark; // 备注
-    private Timestamp createTime; // 创建时间
-    private Timestamp updateTime; // 更新时间
+    private LocalDateTime createTime; // 创建时间
+    private LocalDateTime updateTime; // 更新时间
     private Byte isDeleted; // 是否删除（0-未删除，1-已删除）
 }
 

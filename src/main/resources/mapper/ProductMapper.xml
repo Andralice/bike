@@ -32,6 +32,47 @@
         <if test="productId != null"> AND productId = #{productId}</if>
     </select>
 
+    <select id="selectProductCreate" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
+        SELECT
+        productId,
+        productName,
+        category,
+        supplierName,
+        stashName,
+        storageTemperature,
+        createTime,
+        updateTime
+        FROM
+        tb_product
+        WHERE 1 = 1
+        <if test="productName != null"> AND productName = #{productName}</if>
+        ORDER BY createTime DESC LIMIT 1
+    </select>
+
+    <!-- Select Product by Primary Key -->
+    <select id="selectProductByName" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
+        SELECT
+        productId,
+        productName,
+        category,
+        supplierName,
+        stashName,
+        storageTemperature,
+        createTime,
+        updateTime
+        FROM
+        tb_product
+        WHERE 1 = 1
+        <if test="productName != null"> AND productName = #{productName}</if>
+        <if test="category != null"> AND category = #{category}</if>
+        <if test="supplierName != null"> AND supplierName = #{supplierName}</if>
+        <if test="stashName != null"> AND stashName = #{stashName}</if>
+        <if test="storageTemperature != null"> AND storageTemperature = #{storageTemperature}</if>
+    </select>
+
+
+
+
     <!-- 查询多条数据 -->
     <select id="selectAllProduct" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
         SELECT * FROM tb_product LIMIT ${(page-1)*size}, ${size}
