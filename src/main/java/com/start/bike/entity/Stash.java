@@ -5,17 +5,16 @@ import java.sql.Timestamp;
 
 @Data
 public class Stash {
-
-    private Integer stashId; // 仓库编号
+    private Integer stashId; // 仓库ID
     private String stashName; // 仓库名称
-    private String adminName;
     private String stashAddress; // 仓库地址
     private String storageTemperature; // 存储温度
     private String stashArea; // 仓库面积
-    private String managerName;// 管理员名称
-    private String remark;// 备注
+    private String adminName; // 管理员名称
+    private String remark; // 备注
     private Timestamp createTime; // 创建时间
     private Timestamp updateTime; // 更新时间
+    private Byte isDeleted; // 是否删除（0-未删除，1-已删除）
 }
 
 
