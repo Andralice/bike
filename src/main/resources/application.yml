@@ -32,6 +32,8 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印 SQL 语句
   mapper-locations: classpath*:mapper/*.xml # 映射文件位置 (修正路径)
   type-aliases-package: com.start.bike.entity # 实体类包路径
+  # application.yml
+  type-handlers-package: com.start.bike.typehandler  # TypeHandler 所在包
   global-config:
     db-config:
       ddl: true

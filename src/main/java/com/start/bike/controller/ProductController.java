@@ -87,6 +87,7 @@ public class ProductController {
 
             body.put("success", true);
             body.put("message", "商品创建成功");
+            body.put("result", updateData);
             return ResponseEntity.status(HttpStatus.CREATED).body(body);
         } catch (Exception e) {
             body.put("success", false);

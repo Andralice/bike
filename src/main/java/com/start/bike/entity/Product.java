@@ -1,7 +1,8 @@
 package com.start.bike.entity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
-import java.sql.Timestamp;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,6 +14,9 @@ public class Product {
     private String supplierName; // 供应商名称
     private String storageTemperature; // 存储温度
     private String remark; // 备注
-    private LocalDateTime createTime; // 创建时间
-    private LocalDateTime updateTime; // 更新时间
+    private int shelfLife; // 保质期
+    private String  imageUrl; // 商品图片
+    private String productTime; // 生产日期
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 }

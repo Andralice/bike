@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.start.bike.mapper.ProductMapper">
 
-    <!-- Result Map for Product -->
+    <!-- 结果映射(参考网页7的ResultMap配置) -->
     <resultMap id="ProductResultMap" type="com.start.bike.entity.Product">
         <id property="productId" column="productId"/>
         <result property="productName" column="productName"/>
@@ -11,110 +12,77 @@
         <result property="supplierName" column="supplierName"/>
         <result property="stashName" column="stashName"/>
         <result property="storageTemperature" column="storageTemperature"/>
+        <result property="shelfLife" column="shelfLife"/>
+        <result property="imageUrl" column="imageUrl" />
+        <result property="productTime" column="productTime"/>
         <result property="createTime" column="createTime"/>
         <result property="updateTime" column="updateTime"/>
     </resultMap>
 
-    <!-- Select Product by Primary Key -->
-    <select id="selectProductById" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
-        SELECT
-            productId,
-            productName,
-            category,
-            supplierName,
-            stashName,
-            storageTemperature,
-            createTime,
-            updateTime
-        FROM
-            tb_product
-        WHERE 1 = 1
-        <if test="productId != null"> AND productId = #{productId}</if>
+    <!-- 根据ID查询(网页1的select示例) -->
+    <select id="selectProductById" resultMap="ProductResultMap">
+        SELECT * FROM tb_product
+        WHERE productId = #{productId}
     </select>
 
+    <!-- 根据条件查询(网页3的动态WHERE示例) -->
+    <select id="selectProductByName" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
+        SELECT * FROM tb_product
+        <where>
+            <if test="productName != null">productName = #{productName}</if>
+            <if test="category != null">AND category = #{category}</if>
+            <if test="supplierName != null">AND supplierName = #{supplierName}</if>
+        </where>
+    </select>
+
+    <!-- 根据条件查询(网页4的创建查询) -->
     <select id="selectProductCreate" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
-        SELECT
-        productId,
-        productName,
-        category,
-        supplierName,
-        stashName,
-        storageTemperature,
-        createTime,
-        updateTime
-        FROM
-        tb_product
-        WHERE 1 = 1
-        <if test="productName != null"> AND productName = #{productName}</if>
+        SELECT * FROM tb_product
+        <where> 1 = 1
+            <if test="productName != null">AND productName = #{productName}</if>
+        </where>
         ORDER BY createTime DESC LIMIT 1
     </select>
 
-    <!-- Select Product by Primary Key -->
-    <select id="selectProductByName" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
-        SELECT
-        productId,
-        productName,
-        category,
-        supplierName,
-        stashName,
-        storageTemperature,
-        createTime,
-        updateTime
-        FROM
-        tb_product
-        WHERE 1 = 1
-        <if test="productName != null"> AND productName = #{productName}</if>
-        <if test="category != null"> AND category = #{category}</if>
-        <if test="supplierName != null"> AND supplierName = #{supplierName}</if>
-        <if test="stashName != null"> AND stashName = #{stashName}</if>
-        <if test="storageTemperature != null"> AND storageTemperature = #{storageTemperature}</if>
+    <!-- 分页查询(网页1的分页语法) -->
+    <select id="selectAllProduct" resultMap="ProductResultMap">
+        SELECT * FROM tb_product
+                          LIMIT #{page}, #{size}
     </select>
 
 
 
 
-    <!-- 查询多条数据 -->
-    <select id="selectAllProduct" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
-        SELECT * FROM tb_product LIMIT ${(page-1)*size}, ${size}
-    </select>
-
-    <!-- Insert Product -->
+    <!-- 插入数据(网页2的参数示例) -->
     <insert id="insertProduct" parameterType="com.start.bike.entity.Product">
-        INSERT INTO tb_product (
-            productName,
-            category,
-            supplierName,
-            stashName,
-            storageTemperature,
-            createTime,
-            updateTime
+        INSERT INTO tb_product(
+            productName, category, supplierName,
+            stashName, storageTemperature, imageUrl,
+            shelfLife, productTime, createTime
         ) VALUES (
-                     #{productName},
-                     #{category},
-                     #{supplierName},
-                     #{stashName},
-                     #{storageTemperature},
-                     NOW(),
-                     NOW()
+                     #{productName}, #{category}, #{supplierName},
+                     #{stashName}, #{storageTemperature}, #{imageUrl},
+                     #{shelfLife}, #{productTime}, NOW()
                  )
     </insert>
 
-    <!-- Update Product -->
+    <!-- 更新数据(网页6的set标签应用) -->
     <update id="updateProduct" parameterType="com.start.bike.entity.Product">
         UPDATE tb_product
-        SET
-           <if test="productName != null">productName = #{productName},</if>
-           <if test="category != null">category = #{category},</if>
-           <if test="supplierName != null">supplierName = #{supplierName},</if>
-           <if test="stashName != null">stashName = #{stashName},</if>
-           <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
+        <set>
+            <if test="productName != null">productName = #{productName},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="supplierName != null">supplierName = #{supplierName},</if>
+            <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
+            <if test="imageUrl != null">imageUrl = #{imageUrl},</if>
+            <if test="shelfLife != null">shelfLife = #{shelfLife},</if>
             updateTime = NOW()
-        WHERE
-            productId = #{productId}
+        </set>
+        WHERE productId = #{productId}
     </update>
 
-    <!-- Delete Product -->
-    <delete id="deleteProductById" parameterType="com.start.bike.entity.Product">
+    <!-- 删除数据(网页1的delete示例) -->
+    <delete id="deleteProductById">
         DELETE FROM tb_product
         WHERE productId = #{productId}
     </delete>
