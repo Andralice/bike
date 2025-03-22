@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
+    User findUser(String username);
     // 根据用户名查询用户
     User selectLoginUser( User user);
     List<User> selectAllUsers(int page, int size);

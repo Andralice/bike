@@ -93,6 +93,31 @@ public class UserController {
         }
     }
 
+
+    @PostMapping("/findUser")
+    public ResponseEntity<Map<String, Object>> findUser(@RequestBody User user) {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            User result = userService.findUser(user.getUsername());
+            if (result != null) {
+                // 生成 token
+                body.put("success", "true");
+                body.put("result", result);
+                return ResponseEntity.ok(body);
+            } else {
+                body.put("success", "false");
+                body.put("message", "用户名或密码错误");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(body);
+            }
+        } catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR) // 改为 500
+                    .body(body);
+        }
+    }
+
     @PostMapping("/selectAllUsers")
     public ResponseEntity<Map<String, Object>> selectAllUsers(Page data) {
         Map<String, Object> body = new HashMap<>();

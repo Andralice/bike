@@ -16,15 +16,20 @@
     </resultMap>
 
     <select id="selectLoginUser" resultMap="user_result">
-    SELECT * FROM tb_user WHERE userName = #{username} AND password = #{password}
+    SELECT * FROM tb_user WHERE username = #{username} AND password = #{password}
     </select>
+
+    <select id="findUser" resultMap="user_result" parameterType="String">
+    SELECT * FROM tb_user WHERE username = #{username}
+    </select>
+
     <!-- 查询多条数据 -->
     <select id="selectAllUser" resultMap="user_result">
         SELECT * FROM tb_user LIMIT ${(page-1)*size}, ${size}
     </select>
 
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">
-        SELECT password FROM tb_user WHERE username = #{username}
+        SELECT password FROM tb_user WHERE username = "#{username}"
     </select>
 
     <select id="isUserExists" resultType="java.lang.Boolean">
