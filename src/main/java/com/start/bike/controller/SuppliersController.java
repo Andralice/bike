@@ -65,7 +65,9 @@ public class SuppliersController {
     }
 
     @PostMapping("/createSuppliers")
-    public ResponseEntity<Map<String, Object>> insertSuppliers(@RequestBody Suppliers suppliers) {
+    public ResponseEntity<Map<String, Object>> insertSuppliers(
+            @RequestBody Suppliers suppliers,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必填字段校验
@@ -82,7 +84,7 @@ public class SuppliersController {
             Suppliers updateData = suppliersService.selectSuppliersCreate(suppliers);
 
             // 记录操作日志
-            logUtil.logOperation("create","0", executedSql, updateData, "System");
+            logUtil.logOperation("createSuppliers","0", executedSql, updateData, operatorUser);
 
             body.put("success", "true");
             body.put("message", "供应商创建成功");
@@ -96,7 +98,9 @@ public class SuppliersController {
     }
 
     @PostMapping("/updateSuppliers")
-    public ResponseEntity<Map<String, Object>> updateSuppliers(@RequestBody Suppliers suppliers) {
+    public ResponseEntity<Map<String, Object>> updateSuppliers(
+            @RequestBody Suppliers suppliers,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             Suppliers hisData = suppliersService.selectSuppliersById(suppliers.getSupplierId());
@@ -108,7 +112,7 @@ public class SuppliersController {
             Suppliers updateData = suppliersService.selectSuppliersById(suppliers.getSupplierId());
 
             // 记录操作日志
-            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+            logUtil.logOperation("updateSuppliers",hisData, executedSql, updateData, operatorUser);
             body.put("success", "true");
             body.put("message", "供应商更新成功");
             Suppliers result = suppliersService.selectSuppliersById(suppliers.getSupplierId());
@@ -123,7 +127,9 @@ public class SuppliersController {
     }
 
     @PostMapping("/deleteSuppliersById/{suppliersId}")
-    public ResponseEntity<Map<String, Object>> deleteSuppliers(@PathVariable Integer suppliersId) {
+    public ResponseEntity<Map<String, Object>> deleteSuppliers(
+            @PathVariable Integer suppliersId,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             Suppliers hisData = suppliersService.selectSuppliersById(suppliersId);
@@ -132,7 +138,7 @@ public class SuppliersController {
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
-            logUtil.logOperation("del",hisData, executedSql, "0", "System");
+            logUtil.logOperation("delSuppliers",hisData, executedSql, "0", operatorUser);
 
             if (!deleteResult) {
                 body.put("success", "false");

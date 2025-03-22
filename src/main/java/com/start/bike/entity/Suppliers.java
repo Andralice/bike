@@ -13,7 +13,7 @@ public class Suppliers {
     private String address; // 地址
     private String bankAccount; // 银行账户
     private String remark; // 备注
-    private Byte cooperationStatus; // 合作状态
+    private int cooperationStatus; // 合作状态
     private LocalDateTime createTime; // 创建时间
     private LocalDateTime updateTime; // 更新时间
 }

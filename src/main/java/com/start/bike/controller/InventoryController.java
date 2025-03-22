@@ -7,10 +7,7 @@ import com.start.bike.service.InventoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.start.bike.util.LogUtil;
 
 import java.util.HashMap;
@@ -28,7 +25,8 @@ public class InventoryController {
     private LogUtil logUtil;
 
     @RequestMapping("/selectInventoryById/{inventoryId}")
-    public ResponseEntity<Map<String, Object>> selectInventory(@PathVariable Integer inventoryId) {
+    public ResponseEntity<Map<String, Object>> selectInventory(
+            @PathVariable Integer inventoryId) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 参数校验示例
@@ -75,7 +73,9 @@ public class InventoryController {
     }
 
     @RequestMapping("/createInventory")
-    public ResponseEntity<Map<String, Object>> insertInventory(@RequestBody Inventory inventory) {
+    public ResponseEntity<Map<String, Object>> insertInventory(
+            @RequestBody Inventory inventory,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必填字段校验
@@ -98,7 +98,7 @@ public class InventoryController {
             // 获取创建数据
             Inventory updateData = inventoryService.selectInventoryCreate(inventory);
             // 记录操作日志
-            logUtil.logOperation("create","0", executedSql, updateData, "System");
+            logUtil.logOperation("createInventory","0", executedSql, updateData, operatorUser);
 
             body.put("success", "true");
             body.put("message", "库存记录创建成功");
@@ -113,7 +113,9 @@ public class InventoryController {
     }
 
     @RequestMapping("/updateInventory")
-    public ResponseEntity<Map<String, Object>> updateInventory(@RequestBody Inventory inventory) {
+    public ResponseEntity<Map<String, Object>> updateInventory(
+            @RequestBody Inventory inventory,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必须校验ID存在
@@ -128,7 +130,7 @@ public class InventoryController {
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             Inventory updateData = inventoryService.selectInventoryById(inventory.getInventoryId());
             // 记录操作日志
-            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+            logUtil.logOperation("updateInventory",hisData, executedSql, updateData, operatorUser);
 
             body.put("success", "true");
             body.put("message", "库存更新成功");
@@ -142,7 +144,9 @@ public class InventoryController {
     }
 
     @RequestMapping("/deleteInventoryById/{inventoryId}")
-    public ResponseEntity<Map<String, Object>> deleteInventoryById(@PathVariable Integer inventoryId) {
+    public ResponseEntity<Map<String, Object>> deleteInventoryById(
+            @PathVariable Integer inventoryId,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
 
@@ -152,7 +156,7 @@ public class InventoryController {
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
-            logUtil.logOperation("del",hisData, executedSql, "0", "System");
+            logUtil.logOperation("delInventory",hisData, executedSql, "0", operatorUser);
 
             if (!deleteResult) {
                 body.put("success", "false");

@@ -26,12 +26,15 @@
     </select>
 
     <!-- 根据条件查询(网页3的动态WHERE示例) -->
-    <select id="selectProductByName" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
+    <select id="selectProduct" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
         SELECT * FROM tb_product
         <where>
-            <if test="productName != null">productName = #{productName}</if>
+            <if test="productName != null">productName LIKE CONCAT('%', #{productName}, '%')</if>
             <if test="category != null">AND category = #{category}</if>
             <if test="supplierName != null">AND supplierName = #{supplierName}</if>
+            <if test="stashName != null">AND stashName = #{stashName}</if>
+            <if test="storageTemperature != null">AND storageTemperature = #{storageTemperature}</if>
+            <if test="shelfLife != null">AND shelfLife = #{shelfLife}</if>
         </where>
     </select>
 
@@ -46,8 +49,7 @@
 
     <!-- 分页查询(网页1的分页语法) -->
     <select id="selectAllProduct" resultMap="ProductResultMap">
-        SELECT * FROM tb_product
-                          LIMIT #{page}, #{size}
+        SELECT * FROM tb_product LIMIT ${(page-1)*size}, ${size}
     </select>
 
 

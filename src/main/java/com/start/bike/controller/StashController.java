@@ -67,7 +67,9 @@ public class StashController {
     }
 
     @PostMapping("/createStash")
-    public ResponseEntity<Map<String, Object>>  insertStash(@RequestBody Stash stash){
+    public ResponseEntity<Map<String, Object>>  insertStash(
+            @RequestBody Stash stash,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser){
         Map<String,Object> body = new HashMap<>();
         try {
             if (stashService.isStashExist(stash)){
@@ -82,7 +84,7 @@ public class StashController {
             // 获取创建数据
             Stash updateData = stashService.selectStashCreate(stash);
             // 记录操作日志
-            logUtil.logOperation("create","0", executedSql, updateData, "System");
+            logUtil.logOperation("createStash","0", executedSql, updateData, operatorUser);
             body.put("success", "true");
             body.put("message", "仓库创建成功");
             body.put("result", updateData);
@@ -96,7 +98,9 @@ public class StashController {
     }
 
     @PostMapping("/updateStash")
-    public ResponseEntity<Map<String,Object>> updateStash(@RequestBody Stash stash){
+    public ResponseEntity<Map<String,Object>> updateStash(
+            @RequestBody Stash stash,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser){
         Map<String,Object> body = new HashMap<>();
         try {
             Stash hisData = stashService.selectStashById(stash.getStashId());
@@ -106,7 +110,7 @@ public class StashController {
             // 返回更新后的仓库信息
             Stash updateData = stashService.selectStashById(stash.getStashId());
             // 记录操作日志
-            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+            logUtil.logOperation("updateStash",hisData, executedSql, updateData, operatorUser);
 
             body.put("success", "true");
             body.put("message", "仓库更新成功");
@@ -122,7 +126,9 @@ public class StashController {
     }
 
     @PostMapping("/deleteStashById/{stashId}")
-    public ResponseEntity<Map<String,Object>> deleteStash(@PathVariable  Integer stashId){
+    public ResponseEntity<Map<String,Object>> deleteStash(
+            @PathVariable  Integer stashId,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser){
         Map<String,Object> body = new HashMap<>();
         try {
             Stash hisData = stashService.selectStashById(stashId);
@@ -130,7 +136,7 @@ public class StashController {
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
-            logUtil.logOperation("del",hisData, executedSql, "0", "System");
+            logUtil.logOperation("delStash",hisData, executedSql, "0", operatorUser);
             if(!delete){
                 body.put("success", "false");
                 body.put("message", "仓库删除失败");

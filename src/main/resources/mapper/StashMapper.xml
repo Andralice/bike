@@ -15,6 +15,12 @@
     <!-- 根据stashId查询 -->
     <select id="selectStash" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
         SELECT * FROM tb_stash
+        <where>
+            <if test="stashName != null">stashName LIKE CONCAT('%', #{stashName}, '%')</if>
+            <if test="stashAddress != null">AND stashAddress LIKE CONCAT('%', #{stashAddress}, '%')</if>
+            <if test="supplierName != null">AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
+            <if test="storageTemperature != null">AND storageTemperature = #{storageTemperature}</if>
+        </where>
     </select>
 
     <!-- 正确写法 -->

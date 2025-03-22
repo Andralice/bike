@@ -63,7 +63,9 @@ public class TaskController {
     }
 
     @PostMapping("/createTask")
-    public ResponseEntity<Map<String, Object>> createTask(@RequestBody Task task) {
+    public ResponseEntity<Map<String, Object>> createTask(
+            @RequestBody Task task,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             taskService.insertTask(task);
@@ -72,7 +74,7 @@ public class TaskController {
 
             Task updateData = taskService.selectTaskCreate(task);
             // 记录操作日志
-            logUtil.logOperation("create","0", executedSql, updateData, "System");
+            logUtil.logOperation("createTask","0", executedSql, updateData, operatorUser);
 
             body.put("success", "true");
             body.put("message","任务创建成功");
@@ -85,7 +87,9 @@ public class TaskController {
     }
 
     @PostMapping("/updateTask")
-    public ResponseEntity<Map<String, Object>> updateTask(@RequestBody Task task) {
+    public ResponseEntity<Map<String, Object>> updateTask(
+            @RequestBody Task task,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             Task hisData = taskService.selectTaskById(task.getTaskId());
@@ -95,7 +99,7 @@ public class TaskController {
 
             Task updateData = taskService.selectTaskById(task.getTaskId());
             // 记录操作日志
-            logUtil.logOperation("update",hisData, executedSql, updateData, "System");
+            logUtil.logOperation("updateTask",hisData, executedSql, updateData, operatorUser);
 
             body.put("success", "true");
             body.put("result", updateData);
@@ -108,7 +112,9 @@ public class TaskController {
     }
 
     @PostMapping("/deleteTaskById/{taskId}")
-    public ResponseEntity<Map<String, Object>> deleteTaskById(@PathVariable int taskId){
+    public ResponseEntity<Map<String, Object>> deleteTaskById(
+            @PathVariable int taskId,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser){
         Map<String, Object> body = new HashMap<>();
         try {
             Task hisData = taskService.selectTaskById(taskId);
@@ -116,7 +122,7 @@ public class TaskController {
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
-            logUtil.logOperation("del",hisData, executedSql, '0', "System");
+            logUtil.logOperation("delTask",hisData, executedSql, '0', operatorUser);
             body.put("success", "true");
             body.put("message", "任务删除成功");
             return ResponseEntity.ok(body);

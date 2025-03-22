@@ -66,7 +66,9 @@ public class ProductController {
     }
 
     @PostMapping("/createProduct")
-    public ResponseEntity<Map<String, Object>> insertProduct(@RequestBody Product product) {
+    public ResponseEntity<Map<String, Object>> insertProduct(
+            @RequestBody Product product,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 基础参数校验示例
@@ -82,7 +84,7 @@ public class ProductController {
             // 获取创建数据
             Product updateData = productService.selectProductCreate(product);
             // 记录操作日志
-            logUtil.logOperation("create","0", executedSql, updateData, "System");
+            logUtil.logOperation("createProduct","0", executedSql, updateData, operatorUser);
 
 
             body.put("success", true);
@@ -98,7 +100,9 @@ public class ProductController {
     }
 
     @RequestMapping("/updateProduct")
-    public ResponseEntity<Map<String, Object>> updateProduct(@RequestBody Product product) {
+    public ResponseEntity<Map<String, Object>> updateProduct(
+            @RequestBody Product product,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必须校验ID存在
@@ -115,7 +119,7 @@ public class ProductController {
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             Product result = productService.selectProductById(product.getProductId());
             // 记录操作日志
-            logUtil.logOperation("update",hisData, executedSql, result, "System");
+            logUtil.logOperation("updateProduct",hisData, executedSql, result, operatorUser);
 
 
             body.put("success", "true");
@@ -131,7 +135,9 @@ public class ProductController {
     }
 
     @RequestMapping("/deleteProductById/{productId}")
-    public ResponseEntity<Map<String, Object>> deleteProduct(@PathVariable Integer productId) {
+    public ResponseEntity<Map<String, Object>> deleteProduct(
+            @PathVariable Integer productId,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             Product hisData = productService.selectProductById(productId);
@@ -139,7 +145,7 @@ public class ProductController {
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
-            logUtil.logOperation("del", hisData, executedSql,"0", "System");
+            logUtil.logOperation("delProduct", hisData, executedSql,"0", operatorUser);
             if (!deleteResult) {
                 body.put("success", "false");
                 body.put("message", "商品不存在或删除失败");

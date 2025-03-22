@@ -19,7 +19,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<Product> selectProductByName(Product product) {
-        return productMapper.selectProductByName(product);
+        return productMapper.selectProduct(product);
     }
     @Override
     public Product selectProductCreate(Product product) {

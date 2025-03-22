@@ -30,6 +30,26 @@
         </if>
     </select>
 
+    <!-- 查询供应商 -->
+    <select id="selectSuppliers" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
+        SELECT
+        supplierId,
+        supplierName,
+        contactName,
+        contactPhone,
+        address,
+        bankAccount,
+        cooperationStatus,
+        createTime,
+        updateTime
+        FROM tb_suppliers
+        WHERE
+        <if test="supplierName != null"> supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
+        <if test="contactName != null"> AND contactName = #{contactName}</if>
+        <if test="cooperationStatus != null"> AND cooperationStatus = #{cooperationStatus}</if>
+    </select>
+
+
     <!-- 创建日志 -->
     <select id="selectSuppliersCreate" parameterType="com.start.bike.entity.Suppliers" resultType="com.start.bike.entity.Suppliers">
         SELECT

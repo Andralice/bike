@@ -36,6 +36,25 @@
         </if>
     </select>
 
+    <select id="selectTask" resultType="com.start.bike.entity.Task" resultMap="task_result">
+        SELECT
+        taskId,
+        taskName,
+        taskDescription,
+        taskStatus,
+        taskType,
+        taskAdminName,
+        taskUserName,
+        createTime,
+        updateTime
+        FROM tb_task WHERE 1=1
+        <if test="taskName != null"> AND taskName = #{taskName}</if>
+        <if test="taskStatus != null"> AND taskStatus = #{taskStatus}</if>
+        <if test="taskType != null"> AND taskType = #{taskType}</if>
+        <if test="taskAdminName != null"> AND taskAdminName = #{taskAdminName}</if>
+        <if test="taskUserName != null"> AND taskUserName LIKE CONCAT('%', #{taskUserName}, '%')</if>
+    </select>
+
 <!--创建日志数据-->
     <select id="selectTaskCreate" resultType="com.start.bike.entity.Task" resultMap="task_result">
         SELECT

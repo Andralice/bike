@@ -75,6 +75,8 @@ public class UserController {
                 String token = jwtUtil.generateToken(user.getUsername());
                 body.put("success", "true");
                 body.put("token", refreshToken);
+                body.put("result", result);
+                body.put("message", "登录成功");
                 // 返回 token 给前端
                 return ResponseEntity.ok(body);
             } else {
