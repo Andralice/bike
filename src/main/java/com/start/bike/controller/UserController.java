@@ -1,7 +1,9 @@
 package com.start.bike.controller;
 
+import com.start.bike.entity.Examine;
 import com.start.bike.entity.Page;
 import com.start.bike.entity.User;
+import com.start.bike.service.ExamineService;
 import com.start.bike.util.StringValidator;
 import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +32,14 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    private ExamineService examineService;
+    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/createUser")
-    public ResponseEntity<Map<String, Object>> createUser(@RequestBody User user) {
+    public ResponseEntity<Map<String, Object>> createUser(
+            @RequestBody User user,
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
             if (userService.isUserExists(user)) {
@@ -49,12 +55,25 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(body);
             }
-            // 插入用户数据...
-            userService.insertUser(user);
-            body.put("success", "true");
-            body.put("message", "注册成功");
+            User role_user = userService.findUser(operatorUser);
+            if (Objects.equals(role_user.getRole(),"Admin")){
+                // 插入用户数据...
+                userService.insertUser(user);
+                body.put("success", "true");
+                body.put("message", "用户创建成功");
+                return ResponseEntity.ok(body);
+            }else {
+                Examine examine = new Examine();
+                examine.setExamineName("用户创建");
+                examine.setExamineData(user);
+                examine.setExamineType("createUser");
+                examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
 
-            return ResponseEntity.ok(body);
+                examineService.CreateExamine(examine);
+                body.put("success", "true");
+                body.put("message", "用户审核创建成功");
+                return ResponseEntity.ok(body);
+            }
         } catch (Exception e) {
             body.put("success", "false3");
             body.put("message", "注册失败，请稍后重试");

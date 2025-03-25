@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.start.bike.mapper.ExamineMapper">
+    <resultMap id="examine" type="com.start.bike.entity.Examine">
+        <result property="examineId" column="examineId"/>
+        <result property="examineName" column="examineName"/>
+        <result property="examineData" column="examineData"/>
+        <result property="examineStatus" column="examineStatus"/>
+        <result property="examineType" column="examineType"/>
+    </resultMap>
+
+    <!-- 查询库存信息 -->
+    <select id="selectExamineById" parameterType="com.start.bike.entity.Examine" resultType="com.start.bike.entity.Examine">
+        SELECT
+        examineId,
+        examineName,
+        examineData,
+        examineStatus,
+        examineType,
+        createTime,
+        updateTime
+        FROM tb_examine
+        WHERE 1=1
+        <if test="examineId != null">
+            AND examineId = #{examineId}
+        </if>
+    </select>
+
+
+    <select id="selectListExamine" parameterType="com.start.bike.entity.Examine" resultType="com.start.bike.entity.Examine">
+        SELECT
+        examineId,
+        examineName,
+        examineData,
+        examineStatus,
+        examineType,
+        createTime,
+        updateTime
+        FROM tb_examine
+        WHERE
+        <!-- 模糊查询条件 -->
+        <if test="examineName != null">examineName LIKE CONCAT('%', #{examineName}, '%')</if>
+        <if test="examineStatus != null"> AND examineStatus = #{examineStatus} </if>
+        <if test="examineType != null"> AND examineType = #{examineType} </if>
+    </select>
+
+
+    <select id="selectAllExamine" parameterType="com.start.bike.entity.Examine" resultType="com.start.bike.entity.Examine">
+        SELECT
+            examineId,
+            examineName,
+            examineData,
+            examineStatus,
+            examineType,
+            createTime,
+            updateTime
+        FROM tb_examine
+    </select>
+
+
+    <!-- 插入库存信息 -->
+    <insert id="CreateExamine" parameterType="com.start.bike.entity.Examine">
+        INSERT INTO tb_examine (
+            examineId,
+            examineName,
+            examineData,
+            examineStatus,
+            examineType,
+            createTime,
+            updateTime
+        ) VALUES (
+                     #{examineName},
+                     #{examineData},
+                     #{examineStatus},
+                     #{examineType},
+                        Now(),
+                     NOW()
+                 )
+    </insert>
+
+    <!-- 更新库存信息 -->
+    <update id="UpdateExamine" parameterType="com.start.bike.entity.Examine">
+        UPDATE tb_examine
+        <set>
+            <if test="examineName != null">examineName = #{examineName},</if>
+            <if test="examineData != null">examineData = #{examineData},</if>
+            <if test="examineStatus != null">examineStatus = #{examineStatus},</if>
+            <if test="examineType != null">examineType = #{examineType},</if>
+            updateTime = NOW()
+        </set>
+        WHERE examineId = #{examineId}
+    </update>
+
+    <!-- 删除库存信息 -->
+    <delete id="deleteInventoryById" parameterType="com.start.bike.entity.Examine">
+        DELETE FROM tb_examine
+        WHERE examineId = #{examineId}
+    </delete>
+
+</mapper>

@@ -1,9 +1,13 @@
 package com.start.bike.controller;
 
 import com.start.bike.context.ThreadLocalContext;
+import com.start.bike.entity.Examine;
 import com.start.bike.entity.Inventory;
 import com.start.bike.entity.Page;
+import com.start.bike.entity.User;
+import com.start.bike.service.ExamineService;
 import com.start.bike.service.InventoryService;
+import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +17,7 @@ import com.start.bike.util.LogUtil;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/Inventory")
@@ -20,6 +25,12 @@ public class InventoryController {
 
     @Autowired
     private InventoryService inventoryService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ExamineService examineService;
 
     @Autowired
     private LogUtil logUtil;
@@ -92,18 +103,35 @@ public class InventoryController {
             if (inventory.getQuantity() == null) {
                 body.put("success", "false");
             }
-            inventoryService.insertInventory(inventory);
-            // 获取最后执行的 SQL 语句
-            String executedSql = ThreadLocalContext.getLastExecutedSql();
-            // 获取创建数据
-            Inventory updateData = inventoryService.selectInventoryCreate(inventory);
-            // 记录操作日志
-            logUtil.logOperation("createInventory","0", executedSql, updateData, operatorUser);
+            User user = userService.findUser(operatorUser);
+            if (Objects.equals(user.getRole(), "Admin")){
+                inventoryService.insertInventory(inventory);
+                // 获取最后执行的 SQL 语句
+                String executedSql = ThreadLocalContext.getLastExecutedSql();
+                // 获取创建数据
+                Inventory updateData = inventoryService.selectInventoryCreate(inventory);
+                // 记录操作日志
+                logUtil.logOperation("createInventory","0", executedSql, updateData, operatorUser);
 
-            body.put("success", "true");
-            body.put("message", "库存记录创建成功");
-            body.put("result",updateData);
-            return ResponseEntity.status(HttpStatus.CREATED).body(body);
+                body.put("success", "true");
+                body.put("message", "库存记录创建成功");
+                body.put("result",updateData);
+                return ResponseEntity.status(HttpStatus.CREATED).body(body);
+            }else{
+                Examine examine = new Examine();
+                examine.setExamineName("库存创建");
+                examine.setExamineData(inventory);
+                examine.setExamineType("createInventory");
+                examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
+
+                examineService.CreateExamine(examine);
+
+                body.put("success", "true");
+                body.put("message", "库存审核已发起");
+                body.put("result",examine);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+            }
+
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "库存创建失败，请稍后重试");
@@ -125,22 +153,31 @@ public class InventoryController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
             }
             Inventory hisData = inventoryService.selectInventoryById(inventory.getInventoryId());
+            int num = inventory.getQuantity();
+
+            if ("add".equals(inventory.getType())) {
+                inventory.setQuantity(hisData.getQuantity() + num);
+            } else {
+                inventory.setQuantity(hisData.getQuantity() - num);
+            }
+
             inventoryService.updateInventory(inventory);
+
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             Inventory updateData = inventoryService.selectInventoryById(inventory.getInventoryId());
-            // 记录操作日志
-            logUtil.logOperation("updateInventory",hisData, executedSql, updateData, operatorUser);
 
+            // 记录操作日志
+            logUtil.logOperation("updateInventory", hisData, executedSql, updateData, operatorUser);
             body.put("success", "true");
             body.put("message", "库存更新成功");
             body.put("result", updateData);
-            return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "库存更新失败，请稍后重试");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
+        return null;
     }
 
     @RequestMapping("/deleteInventoryById/{inventoryId}")
