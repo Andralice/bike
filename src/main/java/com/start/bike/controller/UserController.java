@@ -65,7 +65,7 @@ public class UserController {
             }else {
                 Examine examine = new Examine();
                 examine.setExamineName("用户创建");
-                examine.setExamineData(user);
+                examine.setExamineData(String.valueOf(user));
                 examine.setExamineType("createUser");
                 examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
 

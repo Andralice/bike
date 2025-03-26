@@ -42,7 +42,8 @@
     <select id="selectProductCreate" parameterType="com.start.bike.entity.Product" resultMap="ProductResultMap">
         SELECT * FROM tb_product
         <where> 1 = 1
-            <if test="productName != null">AND productName = #{productName}</if>
+            <if test="productName != null"> AND productName = #{productName}</if>
+            <if test="stashName != null"> AND stashName = #{stashName}</if>
         </where>
         ORDER BY createTime DESC LIMIT 1
     </select>

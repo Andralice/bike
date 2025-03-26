@@ -1,12 +1,10 @@
 package com.start.bike.controller;
 
 import com.start.bike.context.ThreadLocalContext;
-import com.start.bike.entity.Examine;
-import com.start.bike.entity.Inventory;
-import com.start.bike.entity.Page;
-import com.start.bike.entity.User;
+import com.start.bike.entity.*;
 import com.start.bike.service.ExamineService;
 import com.start.bike.service.InventoryService;
+import com.start.bike.service.ProductService;
 import com.start.bike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +29,9 @@ public class InventoryController {
 
     @Autowired
     private ExamineService examineService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private LogUtil logUtil;
@@ -90,46 +91,89 @@ public class InventoryController {
         Map<String, Object> body = new HashMap<>();
         try {
             // 必填字段校验
-            if (inventory.getProductName() == null) {
+            Product newProduct = new Product();
+            newProduct.setProductName(inventory.getProductName());
+            newProduct.setStashName(inventory.getStashName());
+            newProduct.setSupplierName(inventory.getSupplierName());
+            Product product = productService.selectProductCreate(newProduct);
+            if (product == null) {
                 body.put("success", "false");
-                body.put("message", "商品ID不能为空");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+                body.put("message", "商品或仓库不正确");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
             }
-            if (inventory.getStashName() == null) {
-                body.put("success", "false");
-                body.put("message", "仓库ID不能为空");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
-            }
-            if (inventory.getQuantity() == null) {
-                body.put("success", "false");
-            }
+
+            Inventory hisData = inventoryService.selectInventoryCreate(inventory);
+            Inventory updateData = inventoryService.selectInventoryCreate(inventory);
             User user = userService.findUser(operatorUser);
-            if (Objects.equals(user.getRole(), "Admin")){
-                inventoryService.insertInventory(inventory);
-                // 获取最后执行的 SQL 语句
-                String executedSql = ThreadLocalContext.getLastExecutedSql();
-                // 获取创建数据
-                Inventory updateData = inventoryService.selectInventoryCreate(inventory);
-                // 记录操作日志
-                logUtil.logOperation("createInventory","0", executedSql, updateData, operatorUser);
+            if (hisData != null) {
+                int num = inventory.getQuantity();
 
-                body.put("success", "true");
-                body.put("message", "库存记录创建成功");
-                body.put("result",updateData);
-                return ResponseEntity.status(HttpStatus.CREATED).body(body);
+                if ("add".equals(inventory.getType())) {
+                    updateData.setQuantity(hisData.getQuantity() + num);
+                } else {
+                    updateData.setQuantity(hisData.getQuantity() - num);
+                }
+
+                if (Objects.equals(user.getRole(), "Admin")){
+                    inventoryService.insertInventory(inventory);
+                    // 获取最后执行的 SQL 语句
+                    String executedSql = ThreadLocalContext.getLastExecutedSql();
+                    // 记录操作日志
+                    logUtil.logOperation("createInventory",hisData, executedSql, updateData, operatorUser);
+
+                    body.put("success", "true");
+                    body.put("message", "库存记录创建成功");
+                    return ResponseEntity.ok(body);
+                }else{
+                    Examine examine = new Examine();
+                    examine.setExamineName("库存审核");
+                    examine.setExamineData(String.valueOf(inventory));
+                    examine.setExamineType("createInventory");
+                    examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
+
+                    examineService.CreateExamine(examine);
+
+                    // 获取最后执行的 SQL 语句
+                    String executedSql = ThreadLocalContext.getLastExecutedSql();
+                    // 记录操作日志
+                    logUtil.logOperation("createExamine","0", executedSql, examine, operatorUser);
+
+                    body.put("success", "true");
+                    body.put("message", "库存审核已发起");
+                    body.put("result",examine);
+                    return ResponseEntity.ok(body);
+                }
+
             }else{
-                Examine examine = new Examine();
-                examine.setExamineName("库存创建");
-                examine.setExamineData(inventory);
-                examine.setExamineType("createInventory");
-                examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
+                if (Objects.equals(user.getRole(), "Admin")){
+                    inventoryService.insertInventory(inventory);
+                    // 获取最后执行的 SQL 语句
+                    String executedSql = ThreadLocalContext.getLastExecutedSql();
+                    // 记录操作日志
+                    logUtil.logOperation("createInventory","0", executedSql, updateData, operatorUser);
 
-                examineService.CreateExamine(examine);
+                    body.put("success", "true");
+                    body.put("message", "库存记录创建成功");
+                    return ResponseEntity.ok(body);
+                }else{
+                    Examine examine = new Examine();
+                    examine.setExamineName("库存创建");
+                    examine.setExamineData(String.valueOf(inventory));
+                    examine.setExamineType("createInventory");
+                    examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
 
-                body.put("success", "true");
-                body.put("message", "库存审核已发起");
-                body.put("result",examine);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+                    examineService.CreateExamine(examine);
+
+                    // 获取最后执行的 SQL 语句
+                    String executedSql = ThreadLocalContext.getLastExecutedSql();
+                    // 记录操作日志
+                    logUtil.logOperation("createExamine","0", executedSql, examine, operatorUser);
+
+                    body.put("success", "true");
+                    body.put("message", "库存审核已发起");
+                    body.put("result",examine);
+                    return ResponseEntity.ok(body);
+                }
             }
 
         } catch (Exception e) {

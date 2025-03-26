@@ -64,7 +64,6 @@
     <!-- 插入库存信息 -->
     <insert id="CreateExamine" parameterType="com.start.bike.entity.Examine">
         INSERT INTO tb_examine (
-            examineId,
             examineName,
             examineData,
             examineStatus,
@@ -76,7 +75,7 @@
                      #{examineData},
                      #{examineStatus},
                      #{examineType},
-                        Now(),
+                     Now(),
                      NOW()
                  )
     </insert>
@@ -95,7 +94,7 @@
     </update>
 
     <!-- 删除库存信息 -->
-    <delete id="deleteInventoryById" parameterType="com.start.bike.entity.Examine">
+    <delete id="deleteExamineId" parameterType="com.start.bike.entity.Examine">
         DELETE FROM tb_examine
         WHERE examineId = #{examineId}
     </delete>
