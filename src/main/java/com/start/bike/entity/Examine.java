@@ -1,10 +1,12 @@
 package com.start.bike.entity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // 忽略 null 和 空字符串
 public class Examine {
     private Integer examineId; // 审核ID
     private String examineName; // 审核名称

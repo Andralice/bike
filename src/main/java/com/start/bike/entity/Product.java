@@ -1,11 +1,13 @@
 package com.start.bike.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.sql.Blob;
 import java.time.LocalDateTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // 忽略 null 和 空字符串
 public class Product {
     private Integer productId; // 商品ID
     private String productName; // 商品名称

@@ -68,6 +68,7 @@ public class TaskController {
             @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
+            task.setTaskStatus("未完成");
             taskService.insertTask(task);
             // 获取最后执行的 SQL 语句
             String executedSql = ThreadLocalContext.getLastExecutedSql();

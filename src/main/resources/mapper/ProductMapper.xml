@@ -50,7 +50,7 @@
 
     <!-- 分页查询(网页1的分页语法) -->
     <select id="selectAllProduct" resultMap="ProductResultMap">
-        SELECT * FROM tb_product LIMIT ${(page-1)*size}, ${size}
+        SELECT * FROM tb_product
     </select>
 
 

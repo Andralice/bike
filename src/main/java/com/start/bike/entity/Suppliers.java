@@ -1,10 +1,12 @@
 package com.start.bike.entity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // 忽略 null 和 空字符串
 public class Suppliers {
     private Integer supplierId; // 供应商ID
     private String supplierName; // 供应商名称

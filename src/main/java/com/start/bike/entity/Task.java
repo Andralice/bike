@@ -1,10 +1,12 @@
 package com.start.bike.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // 忽略 null 和 空字符串
 public class Task {
     private Integer taskId; // 任务ID
     private String taskName; // 任务名称

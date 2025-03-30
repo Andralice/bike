@@ -20,7 +20,6 @@
         productName,
         stashName,
         supplierName,
-        type,
         quantity,
         lastStockTime
         FROM tb_inventory
@@ -37,7 +36,6 @@
         productName,
         stashName,
         supplierName,
-        type,
         quantity,
         lastStockTime
         FROM tb_inventory
@@ -46,8 +44,6 @@
         <if test="productName != null">productName LIKE CONCAT('%', #{productName}, '%')</if>
         <if test="stashName != null"> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
         <if test="supplierName != null"> AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
-        <!-- type保持精确查询 -->
-        <if test="type != null"> AND type = #{type}</if>
     </select>
 
 
@@ -57,7 +53,6 @@
         productName,
         stashName,
         supplierName,
-        type,
         quantity,
         lastStockTime
         FROM tb_inventory
@@ -70,12 +65,33 @@
 
 
     <select id="selectAllInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
-        SELECT * FROM tb_inventory LIMIT ${(page-1)*size}, ${size}
+        SELECT * FROM tb_inventory
+    </select>
+    <select id="selectAllInventoryLog" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
+        SELECT * FROM tb_inventory_log
     </select>
 
     <!-- 插入库存信息 -->
     <insert id="insertInventory" parameterType="com.start.bike.entity.Inventory">
         INSERT INTO tb_inventory (
+            productName,
+            stashName,
+            supplierName,
+            quantity,
+            lastStockTime
+        ) VALUES (
+                     #{productName},
+                     #{stashName},
+                     #{supplierName},
+                     #{quantity},
+                     NOW()
+                 )
+    </insert>
+
+
+    <!-- 插入库存信息 -->
+    <insert id="insertInventoryLog" parameterType="com.start.bike.entity.Inventory">
+        INSERT INTO tb_inventory_log (
             productName,
             stashName,
             supplierName,
@@ -86,7 +102,7 @@
                      #{productName},
                      #{stashName},
                      #{supplierName},
-                  #{type},
+                     #{type},
                      #{quantity},
                      NOW()
                  )

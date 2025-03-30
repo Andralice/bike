@@ -84,10 +84,7 @@
     <update id="UpdateExamine" parameterType="com.start.bike.entity.Examine">
         UPDATE tb_examine
         <set>
-            <if test="examineName != null">examineName = #{examineName},</if>
-            <if test="examineData != null">examineData = #{examineData},</if>
             <if test="examineStatus != null">examineStatus = #{examineStatus},</if>
-            <if test="examineType != null">examineType = #{examineType},</if>
             updateTime = NOW()
         </set>
         WHERE examineId = #{examineId}

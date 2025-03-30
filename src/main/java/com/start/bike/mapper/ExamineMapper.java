@@ -4,7 +4,7 @@ import com.start.bike.entity.Examine;
 import java.util.List;
 
 public interface ExamineMapper {
-    List<Examine> selectAllExamine(int page, int size);
+    List<Examine> selectAllExamine();
     Examine selectExamineById(Integer examineId);
     List<Examine> selectListExamine(Examine examine);
     void CreateExamine(Examine examine);

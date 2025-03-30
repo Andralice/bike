@@ -2,6 +2,7 @@ package com.start.bike.controller;
 
 import com.start.bike.entity.Examine;
 import com.start.bike.entity.Page;
+import com.start.bike.entity.Task;
 import com.start.bike.entity.User;
 import com.start.bike.service.ExamineService;
 import com.start.bike.util.StringValidator;
@@ -32,8 +33,6 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
-    private ExamineService examineService;
-    @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/createUser")
@@ -55,25 +54,11 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(body);
             }
-            User role_user = userService.findUser(operatorUser);
-            if (Objects.equals(role_user.getRole(),"Admin")){
-                // 插入用户数据...
-                userService.insertUser(user);
-                body.put("success", "true");
-                body.put("message", "用户创建成功");
-                return ResponseEntity.ok(body);
-            }else {
-                Examine examine = new Examine();
-                examine.setExamineName("用户创建");
-                examine.setExamineData(String.valueOf(user));
-                examine.setExamineType("createUser");
-                examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
-
-                examineService.CreateExamine(examine);
-                body.put("success", "true");
-                body.put("message", "用户审核创建成功");
-                return ResponseEntity.ok(body);
-            }
+            // 插入用户数据...
+            userService.insertUser(user);
+            body.put("success", "true");
+            body.put("message", "用户创建成功");
+            return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false3");
             body.put("message", "注册失败，请稍后重试");
@@ -94,6 +79,7 @@ public class UserController {
                 String token = jwtUtil.generateToken(user.getUsername());
                 body.put("success", "true");
                 body.put("token", refreshToken);
+
                 body.put("result", result);
                 body.put("message", "登录成功");
                 // 返回 token 给前端
@@ -112,6 +98,26 @@ public class UserController {
         }
     }
 
+    @PostMapping("/selectUserById/{userId}")
+    public ResponseEntity<Map<String, Object>> selectUserById(@PathVariable int userId)  {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            User result = userService.selectUserById(userId);
+            if (result == null) {
+                body.put("success", "false");
+                body.put("message", "用户不存在");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+            }
+            body.put("success", "true");
+            body.put("message", "查询成功");
+            body.put("result", result);
+            return ResponseEntity.ok(body);
+        }catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
 
     @PostMapping("/findUser")
     public ResponseEntity<Map<String, Object>> findUser(@RequestBody User user) {
@@ -137,15 +143,16 @@ public class UserController {
         }
     }
 
-    @PostMapping("/selectAllUsers")
-    public ResponseEntity<Map<String, Object>> selectAllUsers(Page data) {
+    @PostMapping("/selectAllUser")
+    public ResponseEntity<Map<String, Object>> selectAllUser(Page data) {
         Map<String, Object> body = new HashMap<>();
         int page = data.getPage();
         int size = data.getSize();
         try {
-            List<User> result = userService.selectAllUsers(page, size);
+            List<User> result = userService.selectAllUser(page, size);
             body.put("success", "true");
             body.put("result", result);
+            body.put("num", result.size());
             return ResponseEntity.ok(body);
         }catch (Exception e) {
             body.put("success", "false");
@@ -178,12 +185,13 @@ public class UserController {
         }
     }
 
-    @PostMapping("/deleteUser/{userId}")
+    @PostMapping("/deleteUserById/{userId}")
     public ResponseEntity<Map<String, Object>> delete(@PathVariable Integer userId) {
         Map<String, Object> body = new HashMap<>();
         try {
             // 1. 参数校验（根据业务需求添加）
             if (userId == null) {
+
                 body.put("success", "false");
                 body.put("message", "用户ID不能为空");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)

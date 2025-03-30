@@ -10,12 +10,12 @@
         <result column="taskStatus" property="taskStatus"/>
         <result column="taskType" property="taskType"/>
         <result column="taskAdminName" property="taskAdminName"/>
-        <result column="taskUserName" property="taskUserName" typeHandler="com.start.bike.typehandler.StringListTypeHandler"/>
+        <result column="taskUserNames" property="taskUserNames" />
     </resultMap>
 
     <!-- 正确写法 -->
     <select id="selectAllTask" resultType="com.start.bike.entity.Task" resultMap="task_result">
-        SELECT * FROM tb_task LIMIT ${(page-1)*size}, ${size}
+        SELECT * FROM tb_task
     </select>
 
 <!--    ID查询数据-->
@@ -27,7 +27,7 @@
         taskStatus,
         taskType,
         taskAdminName,
-        taskUserName,
+        taskUserNames,
         createTime,
         updateTime
         FROM tb_task WHERE 1=1
@@ -44,7 +44,7 @@
         taskStatus,
         taskType,
         taskAdminName,
-        taskUserName,
+        taskUserNames,
         createTime,
         updateTime
         FROM tb_task WHERE 1=1
@@ -52,7 +52,7 @@
         <if test="taskStatus != null"> AND taskStatus = #{taskStatus}</if>
         <if test="taskType != null"> AND taskType = #{taskType}</if>
         <if test="taskAdminName != null"> AND taskAdminName = #{taskAdminName}</if>
-        <if test="taskUserName != null"> AND taskUserName LIKE CONCAT('%', #{taskUserName}, '%')</if>
+        <if test="taskUserNames != null"> AND taskUserNames LIKE CONCAT('%', #{taskUserNames}, '%')</if>
     </select>
 
 <!--创建日志数据-->
@@ -64,7 +64,7 @@
         taskStatus,
         taskType,
         taskAdminName,
-        taskUserName,
+        taskUserNames,
         createTime,
         updateTime
         FROM tb_task WHERE 1=1
@@ -82,7 +82,7 @@
             taskStatus,
             taskType,
             taskAdminName,
-            taskUserName,
+            taskUserNames,
             createTime,
             updateTime
         ) VALUES (
@@ -91,7 +91,7 @@
                      #{taskStatus},
                      #{taskType},
                      #{taskAdminName},
-                     #{taskUserName, typeHandler=com.start.bike.typehandler.StringListTypeHandler},
+                     #{taskUserNames},
                      NOW(),
                      NOW()
                  )
@@ -106,7 +106,7 @@
             <if test="taskStatus != null">taskStatus = #{taskStatus},</if>
             <if test="taskType != null">taskType = #{taskType},</if>
             <if test="taskAdminName != null">taskAdminName = #{taskAdminName},</if>
-            <if test="taskUserName != null">taskUserName = #{taskUserName, typeHandler=com.start.bike.typehandler.StringListTypeHandler},</if>
+            <if test="taskUserNames != null">taskUserNames = #{taskUserNames},</if>
             updateTime = NOW()
         </set>
         WHERE taskId = #{taskId}

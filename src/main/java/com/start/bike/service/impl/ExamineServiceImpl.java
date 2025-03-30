@@ -16,7 +16,7 @@ public class ExamineServiceImpl implements ExamineService {
 
     @Override
     public List<Examine> selectAllExamine(int page, int size) {
-        return examineMapper.selectAllExamine(page,size);
+        return examineMapper.selectAllExamine();
     }
 
     @Override

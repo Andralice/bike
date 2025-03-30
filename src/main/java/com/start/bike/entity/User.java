@@ -1,11 +1,13 @@
 package com.start.bike.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // 忽略 null 和 空字符串
 public class User {
     private Integer userId; // 用户ID
     private String username; // 用户名

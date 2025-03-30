@@ -1,13 +1,16 @@
 package com.start.bike.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_EMPTY) // 忽略 null 和 空字符串
 public class Inventory {
     private Integer inventoryId; // 库存ID
+    private Integer inventoryLogId; // 库存日志ID
     private String productName; // 商品名称
     private String stashName; // 仓库名称
     private String supplierName; // 供应商名称

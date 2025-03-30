@@ -25,7 +25,7 @@
 
     <!-- 正确写法 -->
     <select id="selectAllStash" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
-        SELECT * FROM tb_stash LIMIT ${(page-1)*size}, ${size}
+        SELECT * FROM tb_stash
     </select>
 
     <select id="selectStashById" resultType="com.start.bike.entity.Stash" resultMap="stash_result">

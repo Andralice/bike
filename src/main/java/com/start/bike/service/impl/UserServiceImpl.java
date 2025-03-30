@@ -17,6 +17,11 @@ public class UserServiceImpl implements UserService {
     private UserMapper userMapper;
 
     @Override
+    public User selectUserById(int userId) {
+        return userMapper.selectUserById(userId);
+    }
+
+    @Override
     public User findUser(String username ) {
         return userMapper.findUser(username);
     }
@@ -27,8 +32,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> selectAllUsers(int page, int Size) {
-        return userMapper.selectAllUsers(page, Size);
+    public List<User> selectAllUser(int page, int Size) {
+        return userMapper.selectAllUser(page, Size);
     }
 
 

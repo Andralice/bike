@@ -19,13 +19,17 @@
     SELECT * FROM tb_user WHERE username = #{username} AND password = #{password}
     </select>
 
+    <select id="selectUserById" resultMap="user_result">
+        SELECT * FROM tb_user WHERE userId = #{userId}
+    </select>
+
     <select id="findUser" resultMap="user_result" parameterType="String">
     SELECT * FROM tb_user WHERE username = #{username}
     </select>
 
     <!-- 查询多条数据 -->
     <select id="selectAllUser" resultMap="user_result">
-        SELECT * FROM tb_user LIMIT ${(page-1)*size}, ${size}
+        SELECT * FROM tb_user
     </select>
 
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">

@@ -1,11 +1,15 @@
 package com.start.bike.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.start.bike.context.ThreadLocalContext;
 import com.start.bike.entity.*;
 import com.start.bike.service.ExamineService;
 import com.start.bike.service.InventoryService;
 import com.start.bike.service.ProductService;
 import com.start.bike.service.UserService;
+import com.start.bike.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +29,7 @@ public class InventoryController {
     private InventoryService inventoryService;
 
     @Autowired
-    private UserService userService;
+    private UserRole userRole;
 
     @Autowired
     private ExamineService examineService;
@@ -66,15 +70,34 @@ public class InventoryController {
     }
 
     @RequestMapping("/selectAllInventory")
-    public ResponseEntity<Map<String, Object>> selectAllInventory(@RequestBody Page data) {
+    public ResponseEntity<Map<String, Object>> selectAllInventory(
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
-        int page = data.getPage();
-        int size = data.getSize();
         try {
-            List<Inventory> result = inventoryService.selectAllInventory(page, size);
+            List<Inventory> result = inventoryService.selectAllInventory();
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);
+            body.put("num",result.size());
+            return ResponseEntity.ok(body);
+        } catch (Exception e) {
+            body.put("success", "false");
+            body.put("message", "仓库查询失败，请稍后重试");
+            body.put("error",e.getMessage() );
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
+        }
+    }
+
+    @RequestMapping("/selectAllInventoryLog")
+    public ResponseEntity<Map<String, Object>> selectAllInventoryLog(
+            @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
+        Map<String, Object> body = new HashMap<>();
+        try {
+            List<Inventory> result = inventoryService.selectAllInventoryLog();
+            body.put("success", "true");
+            body.put("message", "查询成功");
+            body.put("result", result);
+            body.put("num",result.size());
             return ResponseEntity.ok(body);
         } catch (Exception e) {
             body.put("success", "false");
@@ -89,93 +112,73 @@ public class InventoryController {
             @RequestBody Inventory inventory,
             @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper(); // 使用 Jackson
         try {
             // 必填字段校验
             Product newProduct = new Product();
             newProduct.setProductName(inventory.getProductName());
             newProduct.setStashName(inventory.getStashName());
             newProduct.setSupplierName(inventory.getSupplierName());
-            Product product = productService.selectProductCreate(newProduct);
-            if (product == null) {
-                body.put("success", "false");
-                body.put("message", "商品或仓库不正确");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
 
+            inventoryService.insertInventoryLog(inventory);
+
+            // 检查是否存在现有库存记录
             Inventory hisData = inventoryService.selectInventoryCreate(inventory);
-            Inventory updateData = inventoryService.selectInventoryCreate(inventory);
-            User user = userService.findUser(operatorUser);
+            boolean isAdmin = Objects.equals(userRole.user_role(operatorUser), "Admin");
+
             if (hisData != null) {
                 int num = inventory.getQuantity();
-
+                Inventory updateData = inventoryService.selectInventoryCreate(inventory);
                 if ("add".equals(inventory.getType())) {
                     updateData.setQuantity(hisData.getQuantity() + num);
                 } else {
                     updateData.setQuantity(hisData.getQuantity() - num);
                 }
 
-                if (Objects.equals(user.getRole(), "Admin")){
-                    inventoryService.insertInventory(inventory);
+                if (isAdmin) {
+                    inventoryService.updateInventory(updateData);
+
                     // 获取最后执行的 SQL 语句
                     String executedSql = ThreadLocalContext.getLastExecutedSql();
+
                     // 记录操作日志
-                    logUtil.logOperation("createInventory",hisData, executedSql, updateData, operatorUser);
+                    logUtil.logOperation("updateInventory", hisData, executedSql, updateData, operatorUser);
 
                     body.put("success", "true");
-                    body.put("message", "库存记录创建成功");
+                    body.put("message", "库存记录更新成功");
                     return ResponseEntity.ok(body);
-                }else{
-                    Examine examine = new Examine();
-                    examine.setExamineName("库存审核");
-                    examine.setExamineData(String.valueOf(inventory));
-                    examine.setExamineType("createInventory");
-                    examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
-
-                    examineService.CreateExamine(examine);
-
-                    // 获取最后执行的 SQL 语句
-                    String executedSql = ThreadLocalContext.getLastExecutedSql();
-                    // 记录操作日志
-                    logUtil.logOperation("createExamine","0", executedSql, examine, operatorUser);
+                } else {
+                    // 创建审核记录
+                    Examine examine = createExamine(inventory, "updateInventory", operatorUser, objectMapper);
 
                     body.put("success", "true");
                     body.put("message", "库存审核已发起");
-                    body.put("result",examine);
+                    body.put("result", examine);
                     return ResponseEntity.ok(body);
                 }
-
-            }else{
-                if (Objects.equals(user.getRole(), "Admin")){
+            } else {
+                if (isAdmin) {
                     inventoryService.insertInventory(inventory);
+
                     // 获取最后执行的 SQL 语句
                     String executedSql = ThreadLocalContext.getLastExecutedSql();
+
                     // 记录操作日志
-                    logUtil.logOperation("createInventory","0", executedSql, updateData, operatorUser);
+                    logUtil.logOperation("createInventory", "0", executedSql, inventory, operatorUser);
 
                     body.put("success", "true");
                     body.put("message", "库存记录创建成功");
                     return ResponseEntity.ok(body);
-                }else{
-                    Examine examine = new Examine();
-                    examine.setExamineName("库存创建");
-                    examine.setExamineData(String.valueOf(inventory));
-                    examine.setExamineType("createInventory");
-                    examine.setExamineStatus("0"); // 0-待审核 1-审核通过 2-审核不通过
-
-                    examineService.CreateExamine(examine);
-
-                    // 获取最后执行的 SQL 语句
-                    String executedSql = ThreadLocalContext.getLastExecutedSql();
-                    // 记录操作日志
-                    logUtil.logOperation("createExamine","0", executedSql, examine, operatorUser);
+                } else {
+                    // 创建审核记录
+                    Examine examine = createExamine(inventory, "createInventory", operatorUser, objectMapper);
 
                     body.put("success", "true");
                     body.put("message", "库存审核已发起");
-                    body.put("result",examine);
+                    body.put("result", examine);
                     return ResponseEntity.ok(body);
                 }
             }
-
         } catch (Exception e) {
             body.put("success", "false");
             body.put("message", "库存创建失败，请稍后重试");
@@ -183,6 +186,7 @@ public class InventoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
+
 
     @RequestMapping("/updateInventory")
     public ResponseEntity<Map<String, Object>> updateInventory(
@@ -253,4 +257,25 @@ public class InventoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
+
+    // 提取公共方法：创建审核记录
+    private Examine createExamine(Inventory inventory, String examineType, String operatorUser, ObjectMapper objectMapper) throws JsonProcessingException, JsonProcessingException {
+        Examine examine = new Examine();
+        examine.setExamineName("库存" + ("createInventory".equals(examineType) ? "创建" : "更新"));
+
+        examine.setExamineData(objectMapper.writeValueAsString(inventory)); // 使用 Jackson 序列化
+        examine.setExamineType(examineType);
+        examine.setExamineStatus("0"); // 0-待审核
+
+        examineService.CreateExamine(examine);
+
+        // 获取最后执行的 SQL 语句
+        String executedSql = ThreadLocalContext.getLastExecutedSql();
+
+        // 记录操作日志
+        logUtil.logOperation("createExamine", "0", executedSql, examine, operatorUser);
+
+        return examine;
+    }
+
 }

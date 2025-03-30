@@ -1,5 +1,6 @@
 package com.start.bike.mapper;
 
+import com.start.bike.entity.Task;
 import com.start.bike.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,11 +9,11 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-
+    User selectUserById(int userId);
     User findUser(String username);
     // 根据用户名查询用户
     User selectLoginUser( User user);
-    List<User> selectAllUsers(int page, int size);
+    List<User> selectAllUser(int page, int size);
     // 判断用户是否存在
     Boolean isUserExists(User user);
     // 插入用户
