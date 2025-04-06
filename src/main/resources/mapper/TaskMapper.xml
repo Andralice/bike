@@ -16,6 +16,12 @@
     <!-- 正确写法 -->
     <select id="selectAllTask" resultType="com.start.bike.entity.Task" resultMap="task_result">
         SELECT * FROM tb_task
+        WHERE 1=1
+        <if test="taskName != null"> AND taskName = #{taskName}</if>
+        <if test="taskStatus != null"> AND taskStatus = #{taskStatus}</if>
+        <if test="taskType != null"> AND taskType = #{taskType}</if>
+        <if test="taskAdminName != null"> AND taskAdminName = #{taskAdminName}</if>
+        <if test="taskUserNames != null"> AND taskUserNames LIKE CONCAT('%', #{taskUserNames}, '%')</if>
     </select>
 
 <!--    ID查询数据-->
@@ -34,25 +40,6 @@
         <if test="taskId != null">
             AND taskId = #{taskId}
         </if>
-    </select>
-
-    <select id="selectTask" resultType="com.start.bike.entity.Task" resultMap="task_result">
-        SELECT
-        taskId,
-        taskName,
-        taskDescription,
-        taskStatus,
-        taskType,
-        taskAdminName,
-        taskUserNames,
-        createTime,
-        updateTime
-        FROM tb_task WHERE 1=1
-        <if test="taskName != null"> AND taskName = #{taskName}</if>
-        <if test="taskStatus != null"> AND taskStatus = #{taskStatus}</if>
-        <if test="taskType != null"> AND taskType = #{taskType}</if>
-        <if test="taskAdminName != null"> AND taskAdminName = #{taskAdminName}</if>
-        <if test="taskUserNames != null"> AND taskUserNames LIKE CONCAT('%', #{taskUserNames}, '%')</if>
     </select>
 
 <!--创建日志数据-->

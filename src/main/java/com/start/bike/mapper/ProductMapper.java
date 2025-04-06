@@ -5,9 +5,9 @@ import java.util.List;
 
 public interface ProductMapper {
     Product selectProductById(Integer productId);
-    List<Product> selectProduct(Product product);
+    List<Product> selectAllProduct();
     Product selectProductCreate(Product product);
-    List<Product> selectAllProduct(int page, int size);
+    List<Product> selectAllProduct(Product product);
     void insertProduct(Product product);
     void updateProduct(Product product);
     int deleteProductById(Integer productId);

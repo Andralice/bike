@@ -48,12 +48,20 @@ public class StashController {
     }
 
     @PostMapping("/selectAllStash")
-    public ResponseEntity<Map<String, Object>> selectAllStash(@RequestBody Page data){
+    public ResponseEntity<Map<String, Object>> selectAllStash(
+            @RequestBody Stash stash){
         Map<String,Object> body = new HashMap<>();
-        int page = data.getPage();
-        int size = data.getSize();
         try {
-            List<Stash> result = stashService.selectAllStash(page,size);
+            // 定义 result 变量，确保其作用域覆盖整个方法
+            List<Stash> result;
+            // 根据 stash 是否为空调用不同的服务方法
+            if (stash == null) {
+                result = stashService.selectAllStash(); // 查询所有仓库
+            } else {
+                result = stashService.selectAllStash(stash); // 根据条件查询仓库
+            }
+
+
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);

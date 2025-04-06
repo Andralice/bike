@@ -71,10 +71,16 @@ public class InventoryController {
 
     @RequestMapping("/selectAllInventory")
     public ResponseEntity<Map<String, Object>> selectAllInventory(
+            @RequestBody Inventory inventory,
             @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
-            List<Inventory> result = inventoryService.selectAllInventory();
+            List<Inventory> result;
+            if (inventory == null) {
+                result = inventoryService.selectAllInventory();
+            }else {
+                result = inventoryService.selectAllInventory(inventory);
+            }
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);
@@ -90,10 +96,17 @@ public class InventoryController {
 
     @RequestMapping("/selectAllInventoryLog")
     public ResponseEntity<Map<String, Object>> selectAllInventoryLog(
+            @RequestBody Inventory inventory,
             @RequestHeader(name = "X-Operator-User", required = false) String operatorUser) {
         Map<String, Object> body = new HashMap<>();
         try {
-            List<Inventory> result = inventoryService.selectAllInventoryLog();
+
+            List<Inventory> result;
+            if (inventory == null) {
+                result = inventoryService.selectAllInventoryLog();
+            }else {
+                result = inventoryService.selectAllInventoryLog(inventory);
+            }
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);
@@ -119,6 +132,12 @@ public class InventoryController {
             newProduct.setProductName(inventory.getProductName());
             newProduct.setStashName(inventory.getStashName());
             newProduct.setSupplierName(inventory.getSupplierName());
+            Product result = productService.selectProductCreate(newProduct);
+            if (result == null) {
+                body.put("success", "false");
+                body.put("message", "产品不存在");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+            }
 
             inventoryService.insertInventoryLog(inventory);
 
@@ -159,7 +178,6 @@ public class InventoryController {
             } else {
                 if (isAdmin) {
                     inventoryService.insertInventory(inventory);
-
                     // 获取最后执行的 SQL 语句
                     String executedSql = ThreadLocalContext.getLastExecutedSql();
 

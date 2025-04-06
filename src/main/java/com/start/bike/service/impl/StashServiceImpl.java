@@ -25,8 +25,13 @@ public class StashServiceImpl implements StashService {
     }
 
     @Override
-    public List<Stash> selectAllStash(int page, int size) {
-        return stashMapper.selectAllStash(page,size);
+    public List<Stash> selectAllStash(Stash stash) {
+        return stashMapper.selectAllStash( stash);
+    }
+
+    @Override
+    public List<Stash> selectAllStash() {
+        return stashMapper.selectAllStash();
     }
 
     @Override

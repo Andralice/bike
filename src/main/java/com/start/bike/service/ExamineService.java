@@ -5,7 +5,8 @@ import com.start.bike.entity.Examine;
 import java.util.List;
 
 public interface ExamineService {
-    List<Examine> selectAllExamine(int page, int size);
+    List<Examine> selectAllExamine(Examine examine);
+    List<Examine> selectAllExamine();
     Examine selectExamineById(Integer examineId);
     List<Examine> selectListExamine(Examine examine);
     void CreateExamine(Examine examine);

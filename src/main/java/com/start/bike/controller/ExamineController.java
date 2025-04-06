@@ -63,12 +63,15 @@ public class ExamineController {
     }
 
     @RequestMapping("/selectAllExamine")
-    public ResponseEntity<Map<String, Object>> selectAllExamine(@RequestBody Page data ){
+    public ResponseEntity<Map<String, Object>> selectAllExamine(@RequestBody Examine examine ){
         Map<String, Object> body = new HashMap<>();
-        int page = data.getPage();
-        int size = data.getSize();
         try {
-            List<Examine> result = examineService.selectAllExamine(page, size);
+            List<Examine> result;
+            if (examine == null) {
+                result = examineService.selectAllExamine();
+            }else {
+                result = examineService.selectAllExamine(examine);
+            }
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);

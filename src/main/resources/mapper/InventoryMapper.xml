@@ -29,24 +29,6 @@
         </if>
     </select>
 
-
-    <select id="selectInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
-        SELECT
-        inventoryId,
-        productName,
-        stashName,
-        supplierName,
-        quantity,
-        lastStockTime
-        FROM tb_inventory
-        WHERE
-        <!-- 模糊查询条件 -->
-        <if test="productName != null">productName LIKE CONCAT('%', #{productName}, '%')</if>
-        <if test="stashName != null"> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
-        <if test="supplierName != null"> AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
-    </select>
-
-
     <select id="selectInventoryCreate" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
         SELECT
         inventoryId,
@@ -66,9 +48,21 @@
 
     <select id="selectAllInventory" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
         SELECT * FROM tb_inventory
+        WHERE 1=1
+        <!-- 模糊查询条件 -->
+        <if test="productName != null and productName != '' "> AND productName LIKE CONCAT('%', #{productName}, '%')</if>
+        <if test="stashName != null  and stashName != '' "> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
+        <if test="supplierName != null and supplierName != '' "> AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
     </select>
+
     <select id="selectAllInventoryLog" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
         SELECT * FROM tb_inventory_log
+        WHERE 1=1
+        <!-- 模糊查询条件 -->
+        <if test="productName != null and productName != '' "> AND productName LIKE CONCAT('%', #{productName}, '%')</if>
+        <if test="stashName != null  and stashName != '' "> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
+        <if test="supplierName != null and supplierName != '' "> AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
+        <if test="type != null and type != '' "> AND type = #{type}</if>
     </select>
 
     <!-- 插入库存信息 -->

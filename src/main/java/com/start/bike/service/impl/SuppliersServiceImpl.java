@@ -23,8 +23,12 @@ public class SuppliersServiceImpl implements SuppliersService {
         return suppliersMapper.selectSuppliersCreate(suppliers);
     }
     @Override
-    public List<Suppliers> selectAllSuppliers(int page,int size){
-        return suppliersMapper.selectAllSuppliers(page,size);
+    public List<Suppliers> selectAllSuppliers(Suppliers suppliers){
+        return suppliersMapper.selectAllSuppliers(suppliers);
+    }
+    @Override
+    public List<Suppliers> selectAllSuppliers(){
+        return suppliersMapper.selectAllSuppliers();
     }
 
     @Override

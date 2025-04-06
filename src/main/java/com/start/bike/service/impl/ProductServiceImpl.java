@@ -18,18 +18,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<Product> selectProductByName(Product product) {
-        return productMapper.selectProduct(product);
-    }
-    @Override
     public Product selectProductCreate(Product product) {
         return productMapper.selectProductCreate(product);
     }
 
     @Override
-    public List<Product> selectAllProduct(int page, int Size) {
-        return productMapper.selectAllProduct(page, Size);
+    public List<Product> selectAllProduct(Product product) {
+        return productMapper.selectAllProduct(product);
     }
+
+    @Override
+    public List<Product> selectAllProduct() {
+        return productMapper.selectAllProduct();
+    }
+
+
     @Override
     public void insertProduct(Product product) {
         productMapper.insertProduct(product);
@@ -43,6 +46,5 @@ public class ProductServiceImpl implements ProductService {
         int result = productMapper.deleteProductById(productId);
         return result > 0;
     }
-
 
 }

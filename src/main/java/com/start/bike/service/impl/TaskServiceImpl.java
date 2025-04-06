@@ -22,8 +22,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> selectAllTask(int page, int size) {
-        return taskMapper.selectAllTask(page, size);
+    public List<Task> selectAllTask(Task task) {
+        return taskMapper.selectAllTask(task);
+    }
+    @Override
+    public List<Task> selectAllTask() {
+        return taskMapper.selectAllTask();
     }
 
     @Override

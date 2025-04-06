@@ -22,17 +22,23 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public List<Inventory> selectInventory(Inventory inventory) {
-        return inventoryMapper.selectInventory(inventory);
+    public List<Inventory> selectAllInventory(Inventory inventory) {
+        return inventoryMapper.selectAllInventory(inventory);
     }
 
     @Override
     public List<Inventory> selectAllInventory() {
         return inventoryMapper.selectAllInventory();
     }
+
     @Override
     public List<Inventory> selectAllInventoryLog() {
         return inventoryMapper.selectAllInventoryLog();
+    }
+
+    @Override
+    public List<Inventory> selectAllInventoryLog(Inventory inventory) {
+        return inventoryMapper.selectAllInventoryLog(inventory);
     }
 
     @Override

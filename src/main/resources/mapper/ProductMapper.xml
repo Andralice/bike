@@ -51,6 +51,13 @@
     <!-- 分页查询(网页1的分页语法) -->
     <select id="selectAllProduct" resultMap="ProductResultMap">
         SELECT * FROM tb_product
+        WHERE 1=1
+        <if test="productName != null and productName != '' ">AND productName LIKE CONCAT('%', #{productName}, '%')</if>
+        <if test="category != null and category != '' ">AND category = #{category}</if>
+        <if test="supplierName != null and supplierName != '' ">AND supplierName = #{supplierName}</if>
+        <if test="stashName != null and stashName != '' ">AND stashName = #{stashName}</if>
+        <if test="storageTemperature != null and storageTemperature != '' ">AND storageTemperature = #{storageTemperature}</if>
+        <if test="shelfLife != null and shelfLife != '' ">AND shelfLife = #{shelfLife}</if>
     </select>
 
 

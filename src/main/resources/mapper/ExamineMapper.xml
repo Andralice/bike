@@ -58,6 +58,11 @@
             createTime,
             updateTime
         FROM tb_examine
+        WHERE 1=1
+        <!-- 模糊查询条件 -->
+        <if test="examineName != null"> AND examineName LIKE CONCAT('%', #{examineName}, '%')</if>
+        <if test="examineStatus != null"> AND examineStatus = #{examineStatus} </if>
+        <if test="examineType != null"> AND examineType = #{examineType} </if>
     </select>
 
 

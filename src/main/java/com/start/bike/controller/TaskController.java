@@ -46,12 +46,15 @@ public class TaskController {
     }
 
     @PostMapping("/selectAllTask")
-    public ResponseEntity<Map<String, Object>> selectAllTask(@RequestBody Page data) {
+    public ResponseEntity<Map<String, Object>> selectAllTask(@RequestBody Task task) {
         Map<String, Object> body = new HashMap<>();
-        int page = data.getPage();
-        int size = data.getSize();
         try {
-            List<Task> result = taskService.selectAllTask(page, size);
+            List<Task> result;
+            if (task == null) {
+                result = taskService.selectAllTask();
+            }else {
+                result = taskService.selectAllTask(task);
+            }
             body.put("success", "true");
             body.put("result", result);
             return ResponseEntity.ok(body);

@@ -47,12 +47,15 @@ public class SuppliersController {
     }
 
     @PostMapping("/selectAllSuppliers")
-    public ResponseEntity<Map<String, Object>> selectAllSuppliers(@RequestBody Page data) {
+    public ResponseEntity<Map<String, Object>> selectAllSuppliers(@RequestBody Suppliers suppliers) {
         Map<String, Object> body = new HashMap<>();
-        int page = data.getPage();
-        int size = data.getSize();
         try {
-            List<Suppliers> result = suppliersService.selectAllSuppliers(page,size);
+            List<Suppliers> result;
+            if (suppliers == null) {
+                result = suppliersService.selectAllSuppliers();
+            }else {
+                result = suppliersService.selectAllSuppliers(suppliers);
+            }
             body.put("success", "true");
             body.put("message", "查询成功");
             body.put("result", result);

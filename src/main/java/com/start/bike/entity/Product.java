@@ -19,6 +19,13 @@ public class Product {
     private int shelfLife; // 保质期
     private String  imageUrl; // 商品图片
     private String productTime; // 生产日期
+    private int quantity; // 生产数量
+    private int addNum; // 入库数量
+    private int subNum; // 出库数量
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
+
+//    public void setAddNum(int i) {
+//    }
+
 }

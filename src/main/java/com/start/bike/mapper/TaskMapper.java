@@ -7,8 +7,8 @@ import java.util.List;
 public interface TaskMapper {
     Task selectTaskById(int taskId);
     Task selectTaskCreate(Task task);
-    List<Task> selectAllTask(int page, int size);
-    List<Task> selectTask(Task task);
+    List<Task> selectAllTask(Task task);
+    List<Task> selectAllTask();
     void insertTask(Task task);
     void updateTask(Task task);
     int deleteTaskById(int taskId);
