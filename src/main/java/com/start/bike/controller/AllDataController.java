@@ -77,9 +77,7 @@ public class AllDataController {
                 }
             }
 
-            if(Product_Inventory == null) {
-                // 如果查询结果为空，说明当前Product对象没有库存信息，将quantity字段设置为0
-                item.setQuantity(0);
+            if(Product_Inventory.getQuantity() == 0) {
                 // 将没有库存的商品名称添加到数组中
                 Map<String, Object> noProduct = new HashMap<>();
                 noProduct.put("productName", item.getProductName());

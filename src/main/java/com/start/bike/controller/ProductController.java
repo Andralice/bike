@@ -66,21 +66,21 @@ public class ProductController {
                 result = productService.selectAllProduct(product);
             }
             // 清空所有Product对象的imageUrl字段
-//            for(Product item : result) {
-//                Inventory inventory_new = new Inventory();
-//                inventory_new.setProductName(item.getProductName());
-//                inventory_new.setStashName(item.getStashName());
-//                inventory_new.setSupplierName(item.getSupplierName());
-//                // 调用inventoryService的selectInventoryCreate方法，传入Inventory对象，查询库存信息
-//                Inventory num = inventoryService.selectInventoryCreate(inventory_new);
-//                if(num == null) {
-//                    // 如果查询结果为空，说明当前Product对象没有库存信息，将quantity字段设置为0
-//                    item.setQuantity(0);
-//                }else {
-//                    // 如果查询结果不为空，说明当前Product对象有库存信息，将quantity字段设置为库存数量
-//                    item.setQuantity(num.getQuantity());
-//                }
-//            }
+            for(Product item : result) {
+                Inventory inventory_new = new Inventory();
+                inventory_new.setProductName(item.getProductName());
+                inventory_new.setStashName(item.getStashName());
+                inventory_new.setSupplierName(item.getSupplierName());
+                // 调用inventoryService的selectInventoryCreate方法，传入Inventory对象，查询库存信息
+                Inventory num = inventoryService.selectInventoryCreate(inventory_new);
+                if(num == null) {
+                    // 如果查询结果为空，说明当前Product对象没有库存信息，将quantity字段设置为0
+                    item.setQuantity(0);
+                }else {
+                    // 如果查询结果不为空，说明当前Product对象有库存信息，将quantity字段设置为库存数量
+                    item.setQuantity(num.getQuantity());
+                }
+            }
             body.put("success", "true");
             body.put("result", result);
             return ResponseEntity.ok(body);
