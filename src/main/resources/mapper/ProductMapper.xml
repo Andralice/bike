@@ -68,11 +68,11 @@
         INSERT INTO tb_product(
             productName, category, supplierName,
             stashName, storageTemperature, imageUrl,
-            shelfLife, productTime, createTime
+            shelfLife, productTime, createTime,updateTime
         ) VALUES (
                      #{productName}, #{category}, #{supplierName},
                      #{stashName}, #{storageTemperature}, #{imageUrl},
-                     #{shelfLife}, #{productTime}, NOW()
+                     #{shelfLife}, #{productTime}, NOW(), NOW()
                  )
     </insert>
 

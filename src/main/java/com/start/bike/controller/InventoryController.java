@@ -168,7 +168,7 @@ public class InventoryController {
                     return ResponseEntity.ok(body);
                 } else {
                     // 创建审核记录
-                    Examine examine = createExamine(inventory, "updateInventory", operatorUser, objectMapper);
+                    Examine examine = createExamine(inventory, inventory.getType(), operatorUser, objectMapper);
 
                     body.put("success", "true");
                     body.put("message", "库存审核已发起");
@@ -189,7 +189,7 @@ public class InventoryController {
                     return ResponseEntity.ok(body);
                 } else {
                     // 创建审核记录
-                    Examine examine = createExamine(inventory, "createInventory", operatorUser, objectMapper);
+                    Examine examine = createExamine(inventory, inventory.getType(), operatorUser, objectMapper);
 
                     body.put("success", "true");
                     body.put("message", "库存审核已发起");
