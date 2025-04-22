@@ -106,7 +106,7 @@ public class ExamineController {
         Map<String, Object> body = new HashMap<>();
         try {
             Examine examineData = examineService.selectExamineById(examine.getExamineId());
-            examineService.UpdateExamine(examineData);
+            examineService.UpdateExamine(examine);
             ObjectMapper objectMapper = new ObjectMapper();
             Inventory inventory = objectMapper.readValue(examine.getExamineData(), Inventory.class);
             // 检查是否存在现有库存记录

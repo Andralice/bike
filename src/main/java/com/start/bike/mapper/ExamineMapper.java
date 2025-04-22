@@ -10,5 +10,7 @@ public interface ExamineMapper {
     List<Examine> selectListExamine(Examine examine);
     void CreateExamine(Examine examine);
     void UpdateExamine(Examine examine);
+
     int DeleteExamineById(Integer examineId);
+//    int DeleteExamineById(Integer examineId);
 }
