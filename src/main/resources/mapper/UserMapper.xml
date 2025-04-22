@@ -30,6 +30,7 @@
     <!-- 查询多条数据 -->
     <select id="selectAllUser" resultMap="user_result">
         SELECT * FROM tb_user
+        ORDER BY createTime DESC
     </select>
 
     <select id="selectUserByPassword" resultType="com.start.bike.entity.User">

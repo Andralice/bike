@@ -63,6 +63,7 @@
         <if test="examineName != null"> AND examineName LIKE CONCAT('%', #{examineName}, '%')</if>
         <if test="examineStatus != null"> AND examineStatus = #{examineStatus} </if>
         <if test="examineType != null"> AND examineType = #{examineType} </if>
+        ORDER BY createTime DESC
     </select>
 
 

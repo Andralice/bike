@@ -58,6 +58,7 @@
         <if test="stashName != null and stashName != '' ">AND stashName = #{stashName}</if>
         <if test="storageTemperature != null and storageTemperature != '' ">AND storageTemperature = #{storageTemperature}</if>
         <if test="shelfLife != null and shelfLife != '' ">AND shelfLife = #{shelfLife}</if>
+        ORDER BY createTime DESC
     </select>
 
 

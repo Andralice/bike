@@ -64,6 +64,7 @@
         <if test="cooperationStatus != null and cooperationStatus != 0">
             AND cooperationStatus = #{cooperationStatus}
         </if>
+        ORDER BY createTime DESC
     </select>
 
     <!-- 插入供应商 -->

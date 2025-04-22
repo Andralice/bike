@@ -12,7 +12,7 @@
         <result column="adminName" property="adminName"/>
     </resultMap>
 
-    <!-- 正确写法 -->
+    <!-- 表单 -->
     <select id="selectAllStash" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
         SELECT * FROM tb_stash
         <where> 1 = 1
@@ -20,6 +20,7 @@
             <if test="stashAddress != null and stashAddress != '' "> AND stashAddress LIKE CONCAT('%', #{stashAddress}, '%')</if>
             <if test="storageTemperature != null and storageTemperature != '' "> AND storageTemperature = #{storageTemperature}</if>
         </where>
+        ORDER BY createTime DESC
     </select>
 
     <select id="selectStashById" resultType="com.start.bike.entity.Stash" resultMap="stash_result">

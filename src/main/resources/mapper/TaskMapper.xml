@@ -22,6 +22,7 @@
         <if test="taskType != null"> AND taskType = #{taskType}</if>
         <if test="taskAdminName != null"> AND taskAdminName = #{taskAdminName}</if>
         <if test="taskUserNames != null"> AND taskUserNames LIKE CONCAT('%', #{taskUserNames}, '%')</if>
+        ORDER BY createTime DESC
     </select>
 
 <!--    ID查询数据-->

@@ -53,6 +53,7 @@
         <if test="productName != null and productName != '' "> AND productName LIKE CONCAT('%', #{productName}, '%')</if>
         <if test="stashName != null  and stashName != '' "> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
         <if test="supplierName != null and supplierName != '' "> AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
+        ORDER BY lastStockTime DESC
     </select>
 
     <select id="selectAllInventoryLog" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
@@ -63,6 +64,7 @@
         <if test="stashName != null  and stashName != '' "> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
         <if test="supplierName != null and supplierName != '' "> AND supplierName LIKE CONCAT('%', #{supplierName}, '%')</if>
         <if test="type != null and type != '' "> AND type = #{type}</if>
+        ORDER BY lastStockTime DESC
     </select>
 
     <!-- 插入库存信息 -->
