@@ -128,16 +128,7 @@ public class InventoryController {
         ObjectMapper objectMapper = new ObjectMapper(); // 使用 Jackson
         try {
             // 必填字段校验
-            Product newProduct = new Product();
-            newProduct.setProductName(inventory.getProductName());
-            newProduct.setStashName(inventory.getStashName());
-            newProduct.setSupplierName(inventory.getSupplierName());
-            Product result = productService.selectProductCreate(newProduct);
-            if (result == null) {
-                body.put("success", "false");
-                body.put("message", "产品不存在");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
-            }
+
 
             inventoryService.insertInventoryLog(inventory);
 

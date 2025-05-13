@@ -71,12 +71,14 @@
     <insert id="insertInventory" parameterType="com.start.bike.entity.Inventory">
         INSERT INTO tb_inventory (
             productName,
+            productionDate,
             stashName,
             supplierName,
             quantity,
             lastStockTime
         ) VALUES (
                      #{productName},
+                  #{productionDate},
                      #{stashName},
                      #{supplierName},
                      #{quantity},

@@ -9,12 +9,12 @@
         <id property="productId" column="productId"/>
         <result property="productName" column="productName"/>
         <result property="category" column="category"/>
-        <result property="supplierName" column="supplierName"/>
-        <result property="stashName" column="stashName"/>
+        <result property="manufacturer" column="manufacturer"/>
+
         <result property="storageTemperature" column="storageTemperature"/>
         <result property="shelfLife" column="shelfLife"/>
         <result property="imageUrl" column="imageUrl" />
-        <result property="productTime" column="productTime"/>
+
         <result property="createTime" column="createTime"/>
         <result property="updateTime" column="updateTime"/>
     </resultMap>
@@ -31,8 +31,6 @@
         <where>
             <if test="productName != null">productName LIKE CONCAT('%', #{productName}, '%')</if>
             <if test="category != null">AND category = #{category}</if>
-            <if test="supplierName != null">AND supplierName = #{supplierName}</if>
-            <if test="stashName != null">AND stashName = #{stashName}</if>
             <if test="storageTemperature != null">AND storageTemperature = #{storageTemperature}</if>
             <if test="shelfLife != null">AND shelfLife = #{shelfLife}</if>
         </where>
@@ -43,7 +41,7 @@
         SELECT * FROM tb_product
         <where> 1 = 1
             <if test="productName != null"> AND productName = #{productName}</if>
-            <if test="stashName != null"> AND stashName = #{stashName}</if>
+
         </where>
         ORDER BY createTime DESC LIMIT 1
     </select>
@@ -62,14 +60,6 @@
             AND category = #{category}
         </if>
 
-        <if test="supplierName != null and supplierName != '' ">
-            AND supplierName LIKE CONCAT('%', #{supplierName}, '%')
-        </if>
-
-        <if test="stashName != null and stashName != '' ">
-            AND stashName LIKE CONCAT('%', #{stashName}, '%')
-        </if>
-
         <if test="storageTemperature != null and storageTemperature != '' ">
             AND storageTemperature = #{storageTemperature}
         </if>
@@ -86,13 +76,12 @@
     <!-- 插入数据(网页2的参数示例) -->
     <insert id="insertProduct" parameterType="com.start.bike.entity.Product">
         INSERT INTO tb_product(
-            productName, category, supplierName,
-            stashName, storageTemperature, imageUrl,
-            shelfLife, productTime, createTime,updateTime
+            productName, category, manufacturer,storageTemperature, imageUrl,
+            shelfLife,  createTime,updateTime
         ) VALUES (
-                     #{productName}, #{category}, #{supplierName},
-                     #{stashName}, #{storageTemperature}, #{imageUrl},
-                     #{shelfLife}, #{productTime}, NOW(), NOW()
+                     #{productName}, #{category}, #{manufacturer},
+                      #{storageTemperature}, #{imageUrl},
+                     #{shelfLife},  NOW(), NOW()
                  )
     </insert>
 
@@ -102,11 +91,10 @@
         <set>
             <if test="productName != null">productName = #{productName},</if>
             <if test="category != null">category = #{category},</if>
-            <if test="supplierName != null">supplierName = #{supplierName},</if>
+            <if test="manufacturer!=null">manufacturer=#{manufacturer},</if>
             <if test="storageTemperature != null">storageTemperature = #{storageTemperature},</if>
             <if test="imageUrl != null">imageUrl = #{imageUrl},</if>
             <if test="shelfLife != null">shelfLife = #{shelfLife},</if>
-            <if test="productTime != null">productTime = #{productTime},</if>
             updateTime = NOW()
         </set>
         WHERE productId = #{productId}

@@ -12,13 +12,12 @@ public class Product {
     private Integer productId; // 商品ID
     private String productName; // 商品名称
     private String category; // 类别
-    private String stashName; // 仓库名称
-    private String supplierName; // 供应商名称
+    private String manufacturer;//生产商
     private String storageTemperature; // 存储温度
     private String remark; // 备注
     private int shelfLife; // 保质期
     private String  imageUrl; // 商品图片
-    private String productTime; // 生产日期
+    private LocalDateTime productionDate; // 生产日期
     private int quantity; // 生产数量
     private int addNum; // 入库数量
     private int subNum; // 出库数量

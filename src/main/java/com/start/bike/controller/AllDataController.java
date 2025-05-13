@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -19,14 +21,17 @@ import java.util.*;
 @RestController
 @RequestMapping("/Panel")
 public class AllDataController {
-    @Autowired
-    private StashService stashService;
 
-    @Autowired
-    private ProductService productService;
 
-    @Autowired
-    private InventoryService inventoryService;
+        @Autowired
+        private StashService stashService;
+
+        @Autowired
+        private ProductService productService;
+
+        @Autowired
+        private InventoryService inventoryService;
+
 
     @RequestMapping("/allData")
     public ResponseEntity<Map<String, Object>> allData() {
@@ -35,154 +40,145 @@ public class AllDataController {
         Map<String, Object> product = new HashMap<>();
         Map<String, Object> inventory = new HashMap<>();
 
+        // 获取仓库、商品、库存及库存日志列表
         List<Stash> stashList = stashService.selectAllStash();
         List<Product> productList = productService.selectAllProduct();
         List<Inventory> inventoryList = inventoryService.selectAllInventory();
         List<Inventory> inventoryLog = inventoryService.selectAllInventoryLog();
-        // 获取所有不重复的productName长度
+
+        // 计算不同商品名称的数量
         int distinctProductNameLength = (int) productList.stream()
                 .map(Product::getProductName)
                 .distinct()
                 .count();
 
-
-        List<Map> noInventoryProducts = new ArrayList<>();
+        // 初始化用于存储特定筛选条件下的商品列表
+        List<Map<String, Object>> noInventoryProducts = new ArrayList<>();
         List<Map<String, Object>> noTimeProducts = new ArrayList<>();
-        List<Map<String, Object>> TimeProducts = new ArrayList<>();
-        // 遍历产品列表中的每个Product对象
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        // 创建一个映射来存储每个产品的库存信息
+        Map<String, List<Inventory>> inventoryMap = new HashMap<>();
+        for (Inventory invItem : inventoryList) {
+            inventoryMap.computeIfAbsent(invItem.getProductName(), k -> new ArrayList<>()).add(invItem);
+        }
+
+        // 遍历productList，检查每个产品的库存情况
         for (Product item : productList) {
-            // 将当前Product对象的imageUrl字段设置为null，实现清空操作
+            // 清空图片链接减少传输数据量
             item.setImageUrl(null);
 
-            // 创建一个新的Inventory对象，用于查询库存信息
-            Inventory inventory_new = new Inventory();
-            // 设置Inventory对象的productName属性，与当前Product对象的名称相同
-            inventory_new.setProductName(item.getProductName());
-            // 设置Inventory对象的stashName属性，与当前Product对象的储藏室名称相同
-            inventory_new.setStashName(item.getStashName());
-            // 设置Inventory对象的supplierName属性，与当前Product对象的供应商名称相同
-            inventory_new.setSupplierName(item.getSupplierName());
+            List<Inventory> inventories = inventoryMap.getOrDefault(item.getProductName(), Collections.emptyList());
+            boolean hasNonZeroInventory = false;
+            String stashName = null;
+            String supplierName = null;
 
-            // 调用inventoryService的selectInventoryCreate方法，传入Inventory对象，查询库存信息
-            Inventory Product_Inventory = inventoryService.selectInventoryCreate(inventory_new);
-            List<Inventory> Product_Inventory_Log = inventoryService.selectAllInventoryLog();
-            item.setAddNum(0);
-            item.setSubNum(0);
-            for (Inventory inventory1 : Product_Inventory_Log) {
-                if (Objects.equals(item.getProductName(),
-                        inventory1.getProductName()) && Objects.equals(item.getStashName(),
-                        inventory1.getStashName()) && Objects.equals(item.getSupplierName(),
-                        inventory1.getSupplierName())) {
-                    if (Objects.equals(inventory1.getType(), "add")) {
-                        item.setAddNum(item.getAddNum() + inventory1.getQuantity());
-                    } else {
-                        item.setSubNum(item.getSubNum() + inventory1.getQuantity());
-                    }
+            for (Inventory invItem : inventories) {
+                if (invItem.getQuantity() > 0) {
+                    hasNonZeroInventory = true;
+                    break;
                 }
+                stashName = invItem.getStashName();
+                supplierName = invItem.getSupplierName();
             }
 
-            if (Product_Inventory == null || Product_Inventory.getQuantity() == 0) {
-                // 如果 Product_Inventory 为 null 或者库存数量为 0
+            // 如果没有非零库存，则加入无库存产品列表
+            if (!hasNonZeroInventory) {
                 Map<String, Object> noProduct = new HashMap<>();
                 noProduct.put("productName", item.getProductName());
-                noProduct.put("stashName", item.getStashName());
-                noProduct.put("supplierName", item.getSupplierName());
+                noProduct.put("stashName", stashName);
+                noProduct.put("supplierName", supplierName);
                 noInventoryProducts.add(noProduct);
             } else {
-                // 如果查询结果不为空且库存数量大于 0，说明当前 Product 对象有库存信息
-                item.setQuantity(Product_Inventory.getQuantity());
-            }
+                // 检查即将过期的商品
+                for (Inventory inventoryItem : inventories) {
+                    LocalDate productionDate = LocalDate.parse(inventoryItem.getProductionDate(), formatter);
+                    long shelfLife = item.getShelfLife(); // 从商品中获取保质期
 
+                    // 计算剩余天数
+                    long daysLeft = ChronoUnit.DAYS.between(LocalDate.now(), productionDate.plusDays(shelfLife));
 
-            if (item.getProductTime() == null || "暂无".equals(item.getProductTime())) {
-                item.setProductTime("暂无");
-            } else {
-                try {
-                    // 将字符串日期转换为Date对象
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                    Date productDate = sdf.parse(item.getProductTime());
-                    Date currentDate = new Date();
-
-                    // 计算日期差(毫秒)
-                    long diff = productDate.getTime() +  item.getShelfLife() * 1L * 24 * 60 * 60 * 1000 - currentDate.getTime();
-                    // 转换为天
-                    long daysLeft = diff / (24 * 60 * 60 * 1000);
-//                    Map<String, Object> TimeProduct = new HashMap<>();
-//                    TimeProduct.put("productName", item.getProductName());
-//                    TimeProduct.put("stashName", item.getStashName());
-//                    TimeProduct.put("supplierName", item.getSupplierName());
-//                    TimeProduct.put("productTime", item.getProductTime());
-//                    TimeProduct.put("shelfLife", item.getShelfLife());
-//                    TimeProduct.put("daysLeft", daysLeft);
-//                    TimeProducts.add(TimeProduct);
-
-
-                    if (daysLeft < 30) {
+                    // 如果剩余天数小于30天，则认为是即将过期商品
+                    if (daysLeft <= 30 && daysLeft >= 0) {
                         Map<String, Object> noTimeProduct = new HashMap<>();
                         noTimeProduct.put("productName", item.getProductName());
-                        noTimeProduct.put("stashName", item.getStashName());
-                        noTimeProduct.put("supplierName", item.getSupplierName());
-                        noTimeProduct.put("productTime", item.getProductTime());
-                        noTimeProduct.put("shelfLife", item.getShelfLife());
+                        noTimeProduct.put("stashName", inventoryItem.getStashName());
+                        noTimeProduct.put("supplierName", inventoryItem.getSupplierName());
+                        noTimeProduct.put("productionDate", inventoryItem.getProductionDate());
+                        noTimeProduct.put("shelfLife", shelfLife);
                         noTimeProduct.put("daysLeft", daysLeft);
                         noTimeProducts.add(noTimeProduct);
                     }
-                    // 按照daysLeft字段排序
-                    noTimeProducts.sort((o1, o2) -> {
-                        Long daysLeft1 = (Long) o1.get("daysLeft");
-                        Long daysLeft2 = (Long) o2.get("daysLeft");
-                        return daysLeft1.compareTo(daysLeft2);
-                    });
-                } catch (ParseException e) {
-                    item.setProductTime("日期格式错误");
                 }
             }
-
         }
 
+        // 处理没有库存记录的商品
+        for (Product item : productList) {
+            if (!inventoryMap.containsKey(item.getProductName())) {
+                // 创建一个用于查询库存信息的对象
+                Inventory inventoryQuery = new Inventory();
+                inventoryQuery.setProductName(item.getProductName());
 
-        // 库存
+                // 查询库存信息
+                Inventory productInventory = inventoryService.selectInventoryCreate(inventoryQuery);
+
+                // 如果没有库存或库存为0，则加入无库存产品列表
+                if (productInventory == null || productInventory.getQuantity() == 0) {
+                    Map<String, Object> noProduct = new HashMap<>();
+                    noProduct.put("productName", item.getProductName());
+                    noProduct.put("stashName", null); // 添加仓库名称
+                    noProduct.put("supplierName", null); // 添加供应商名称
+                    noInventoryProducts.add(noProduct);
+                }
+            }
+        }
+
+        // 统计库存总量、增加和减少的数量
         int addNum = 0;
         int subNum = 0;
         int totalNum = 0;
+
         for (Inventory item : inventoryList) {
             totalNum += item.getQuantity();
         }
 
         for (Inventory item : inventoryLog) {
-
-            if (Objects.equals(item.getType(), "add")) {
+            if ("add".equals(item.getType())) {
                 addNum += item.getQuantity();
-            } else if (Objects.equals(item.getType(), "sub")) {
+            } else if ("sub".equals(item.getType())) {
                 subNum += item.getQuantity();
             }
         }
 
+        // 将数据封装进Map中准备返回
         stash.put("stashList", stashList);
         stash.put("num", stashList.size());
+
         product.put("productList", productList);
         product.put("num", productList.size());
         product.put("ProductNum", distinctProductNameLength);
+
         inventory.put("inventoryList", inventoryList);
         inventory.put("num", inventoryList.size());
         inventory.put("addNum", addNum);
         inventory.put("subNum", subNum);
         inventory.put("totalNum", totalNum);
 
-
         map.put("stash", stash);
         map.put("product", product);
         map.put("inventory", inventory);
-        // 无库存产品
+
         map.put("noInventoryProducts", noInventoryProducts);
         map.put("noInventoryNum", noInventoryProducts.size());
-        // 无时间产品
+
         map.put("noTimeProducts", noTimeProducts);
         map.put("noTimeNum", noTimeProducts.size());
-
-        // 有时间产品
-        map.put("TimeProducts", TimeProducts);
 
         return ResponseEntity.ok(map);
     }
 }
+
+
+

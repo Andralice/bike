@@ -15,6 +15,7 @@ public class Inventory {
     private String stashName; // 仓库名称
     private String supplierName; // 供应商名称
     private String type; // 类型
+    private String productionDate;
     private String remark; // 备注
     private Integer quantity; // 数量
     private LocalDateTime lastStockTime; // 最后入库时间

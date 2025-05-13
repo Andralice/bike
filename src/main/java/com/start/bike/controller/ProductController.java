@@ -55,42 +55,51 @@ public class ProductController {
 
     @RequestMapping("/selectAllProduct")
     public ResponseEntity<Map<String, Object>> selectAllProduct(
-            @RequestBody Product product
+            @RequestBody(required = false) Product product
     ) {
         Map<String, Object> body = new HashMap<>();
         try {
             List<Product> result;
+
+            // 根据是否传入 product 参数决定调用哪个查询方法
             if (product == null) {
                 result = productService.selectAllProduct();
-            }else {
+            } else {
                 result = productService.selectAllProduct(product);
             }
-            // 清空所有Product对象的imageUrl字段
-            for(Product item : result) {
+
+            // 遍历结果列表，设置库存数量
+            for (Product item : result) {
+                // 清空图片地址，减少传输数据量
+//                item.setImageUrl(null);
+
+                // 构造用于查询库存的对象，仅使用 productName
                 Inventory inventory_new = new Inventory();
                 inventory_new.setProductName(item.getProductName());
-                inventory_new.setStashName(item.getStashName());
-                inventory_new.setSupplierName(item.getSupplierName());
-                // 调用inventoryService的selectInventoryCreate方法，传入Inventory对象，查询库存信息
+
+                // 查询库存信息
                 Inventory num = inventoryService.selectInventoryCreate(inventory_new);
-                if(num == null) {
-                    // 如果查询结果为空，说明当前Product对象没有库存信息，将quantity字段设置为0
-                    item.setQuantity(0);
-                }else {
-                    // 如果查询结果不为空，说明当前Product对象有库存信息，将quantity字段设置为库存数量
+
+                // 设置库存数量
+                if (num == null) {
+                    item.setQuantity(0); // 没有库存则设为 0
+                } else {
                     item.setQuantity(num.getQuantity());
                 }
             }
+
+            // 封装返回结果
             body.put("success", "true");
             body.put("result", result);
             return ResponseEntity.ok(body);
-        }catch (Exception e) {
+
+        } catch (Exception e) {
+            // 异常处理
             body.put("success", "false");
             body.put("message", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
-
     @PostMapping("/createProduct")
     public ResponseEntity<Map<String, Object>> insertProduct(
             @RequestBody Product product,
