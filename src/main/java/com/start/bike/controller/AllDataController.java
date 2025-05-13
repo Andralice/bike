@@ -115,25 +115,25 @@ public class AllDataController {
         }
 
         // 处理没有库存记录的商品
-        for (Product item : productList) {
-            if (!inventoryMap.containsKey(item.getProductName())) {
-                // 创建一个用于查询库存信息的对象
-                Inventory inventoryQuery = new Inventory();
-                inventoryQuery.setProductName(item.getProductName());
+        // for (Product item : productList) {
+        //     if (!inventoryMap.containsKey(item.getProductName())) {
+        //         // 创建一个用于查询库存信息的对象
+        //         Inventory inventoryQuery = new Inventory();
+        //         inventoryQuery.setProductName(item.getProductName());
 
-                // 查询库存信息
-                Inventory productInventory = inventoryService.selectInventoryCreate(inventoryQuery);
+        //         // 查询库存信息
+        //         Inventory productInventory = inventoryService.selectInventoryCreate(inventoryQuery);
 
-                // 如果没有库存或库存为0，则加入无库存产品列表
-                if (productInventory == null || productInventory.getQuantity() == 0) {
-                    Map<String, Object> noProduct = new HashMap<>();
-                    noProduct.put("productName", item.getProductName());
-                    noProduct.put("stashName", null); // 添加仓库名称
-                    noProduct.put("supplierName", null); // 添加供应商名称
-                    noInventoryProducts.add(noProduct);
-                }
-            }
-        }
+        //         // 如果没有库存或库存为0，则加入无库存产品列表
+        //         if (productInventory == null || productInventory.getQuantity() == 0) {
+        //             Map<String, Object> noProduct = new HashMap<>();
+        //             noProduct.put("productName", item.getProductName());
+        //             noProduct.put("stashName", null); // 添加仓库名称
+        //             noProduct.put("supplierName", null); // 添加供应商名称
+        //             noInventoryProducts.add(noProduct);
+        //         }
+        //     }
+        // }
 
         // 统计库存总量、增加和减少的数量
         int addNum = 0;
