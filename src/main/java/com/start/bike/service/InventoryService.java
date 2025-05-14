@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface InventoryService {
     Inventory selectInventoryById(Integer inventoryId);
+    List<Inventory> selectInventoryCreatety(Inventory inventory);
     Inventory selectInventoryCreate(Inventory inventory);
     List<Inventory> selectAllInventory(Inventory inventory);
     List<Inventory> selectAllInventory();

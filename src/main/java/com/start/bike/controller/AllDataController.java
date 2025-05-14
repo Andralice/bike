@@ -74,23 +74,47 @@ public class AllDataController {
             String stashName = null;
             String supplierName = null;
 
+            // 标志是否有正库存
+            boolean hasPositiveInventory = false;
+
+// 遍历所有库存项
             for (Inventory invItem : inventories) {
                 if (invItem.getQuantity() > 0) {
-                    hasNonZeroInventory = true;
-                    break;
+                    hasPositiveInventory = true;
+                    break; // 只要有一个正库存就跳出循环
                 }
-                stashName = invItem.getStashName();
-                supplierName = invItem.getSupplierName();
-            }
 
-            // 如果没有非零库存，则加入无库存产品列表
-            if (!hasNonZeroInventory) {
+                // 当前库存为0或负数，添加为一条“无库存产品”
                 Map<String, Object> noProduct = new HashMap<>();
                 noProduct.put("productName", item.getProductName());
-                noProduct.put("stashName", stashName);
-                noProduct.put("supplierName", supplierName);
-                noInventoryProducts.add(noProduct);
-            } else {
+
+                stashName = invItem.getStashName();
+                noProduct.put("stashName", stashName != null ? stashName : "未知仓库");
+
+                supplierName = invItem.getSupplierName();
+                noProduct.put("supplierName", supplierName != null ? supplierName : "未知供应商");
+
+                noInventoryProducts.add(noProduct); // 添加一条记录
+            }
+
+
+// 如果没有正库存，说明所有都是无库存商品（已全部添加）
+            // 如果没有非零库存，则加入无库存产品列表
+//            if (!hasNonZeroInventory) {
+//                Map<String, Object> noProduct = new HashMap<>();
+//                noProduct.put("productName", item.getProductName());
+//                if(stashName!=null){
+//                    noProduct.put("stashName", stashName);
+//                }else {
+//                    noProduct.put("stashName", "未知仓库");
+//                }
+//                if(supplierName!=null){
+//                    noProduct.put("supplierName", supplierName);
+//                }else {
+//                    noProduct.put("supplierName", "未知供应商");
+//                }
+//                noInventoryProducts.add(noProduct);
+//            } else {
                 // 检查即将过期的商品
                 for (Inventory inventoryItem : inventories) {
                     LocalDate productionDate = LocalDate.parse(inventoryItem.getProductionDate(), formatter);
@@ -112,7 +136,7 @@ public class AllDataController {
                     }
                 }
             }
-        }
+//        }
 
         // 处理没有库存记录的商品
         // for (Product item : productList) {
@@ -149,6 +173,19 @@ public class AllDataController {
                 addNum += item.getQuantity();
             } else if ("sub".equals(item.getType())) {
                 subNum += item.getQuantity();
+            }
+        }
+        // 处理没有库存记录的商品（即未入库的商品）
+        for (Product item : productList) {
+            String productName = item.getProductName();
+
+            // 如果该商品不在 inventoryMap 中，说明从未入库
+            if (!inventoryMap.containsKey(productName)) {
+                Map<String, Object> noProduct = new HashMap<>();
+                noProduct.put("productName", productName);
+                noProduct.put("stashName", "未知仓库");
+                noProduct.put("supplierName", "未知供应商");
+                noInventoryProducts.add(noProduct);
             }
         }
 

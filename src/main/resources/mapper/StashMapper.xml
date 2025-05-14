@@ -19,6 +19,7 @@
             <if test="stashName != null and stashName != '' "> AND stashName LIKE CONCAT('%', #{stashName}, '%')</if>
             <if test="stashAddress != null and stashAddress != '' "> AND stashAddress LIKE CONCAT('%', #{stashAddress}, '%')</if>
             <if test="storageTemperature != null and storageTemperature != '' "> AND storageTemperature = #{storageTemperature}</if>
+                 <if test="adminName !=null and adminName!='' ">AND adminName=#{adminName}</if>
         </where>
         ORDER BY createTime DESC
     </select>

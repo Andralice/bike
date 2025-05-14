@@ -78,13 +78,18 @@ public class ProductController {
                 inventory_new.setProductName(item.getProductName());
 
                 // 查询库存信息
-                Inventory num = inventoryService.selectInventoryCreate(inventory_new);
+                List<Inventory> num = inventoryService.selectInventoryCreatety(inventory_new);
 
                 // 设置库存数量
-                if (num == null) {
-                    item.setQuantity(0); // 没有库存则设为 0
+                if (num != null && !num.isEmpty()) {
+                    int numty=num.stream()
+                                    .mapToInt(Inventory::getQuantity)
+                                            .sum();
+
+                    item.setQuantity(numty);// 没有库存则设为 0
                 } else {
-                    item.setQuantity(num.getQuantity());
+
+                    item.setQuantity(0);
                 }
             }
 

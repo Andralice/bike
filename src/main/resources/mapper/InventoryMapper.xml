@@ -29,6 +29,21 @@
         </if>
     </select>
 
+    <select id="selectInventoryCreatety" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
+        SELECT
+        inventoryId,
+        productName,
+        stashName,
+        supplierName,
+        quantity,
+        lastStockTime
+        FROM tb_inventory
+        WHERE 1=1
+        <if test="productName != null"> AND productName = #{productName}</if>
+        <if test="stashName != null"> AND stashName = #{stashName}</if>
+        <if test="supplierName != null"> AND supplierName = #{supplierName}</if>
+--         ORDER BY lastStockTime DESC LIMIT 1
+    </select>
     <select id="selectInventoryCreate" parameterType="com.start.bike.entity.Inventory" resultType="com.start.bike.entity.Inventory">
         SELECT
         inventoryId,
@@ -42,7 +57,7 @@
         <if test="productName != null"> AND productName = #{productName}</if>
         <if test="stashName != null"> AND stashName = #{stashName}</if>
         <if test="supplierName != null"> AND supplierName = #{supplierName}</if>
-        ORDER BY lastStockTime DESC LIMIT 1
+                ORDER BY lastStockTime DESC LIMIT 1
     </select>
 
 
