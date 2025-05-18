@@ -27,7 +27,7 @@
     <select id="selectStashById" resultType="com.start.bike.entity.Stash" resultMap="stash_result">
         SELECT * FROM tb_stash WHERE 1=1
         <if test="stashId != null">
-            AND stashName = #{stashName}
+            AND stashId = #{stashId}
         </if>
     </select>
 

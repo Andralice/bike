@@ -5,6 +5,7 @@ import com.start.bike.entity.Page;
 import com.start.bike.entity.Suppliers;
 import com.start.bike.service.SuppliersService;
 import com.start.bike.util.LogUtil;
+import com.start.bike.util.UserLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class SuppliersController {
 
     @Autowired
     private LogUtil logUtil;
+
+    @Autowired
+    private UserLogUtil userLogUtil;
 
     @PostMapping("/selectSuppliersById/{suppliersId}")
     public ResponseEntity<Map<String, Object>> selectSuppliers(@PathVariable Integer suppliersId) {
@@ -88,6 +92,14 @@ public class SuppliersController {
 
             // 记录操作日志
             logUtil.logOperation("createSuppliers","0", executedSql, updateData, operatorUser);
+            userLogUtil.userLogUtil(
+                    "create",
+                    0,
+                    "Suppliers",
+                    updateData.getSupplierId(),
+                    updateData,
+                    operatorUser);
+
 
             body.put("success", "true");
             body.put("message", "供应商创建成功");
@@ -116,6 +128,15 @@ public class SuppliersController {
 
             // 记录操作日志
             logUtil.logOperation("updateSuppliers",hisData, executedSql, updateData, operatorUser);
+            userLogUtil.userLogUtil(
+                    "delete",
+                    hisData,
+                    "Suppliers",
+                    updateData.getSupplierId(),
+                    updateData,
+                    operatorUser);
+
+
             body.put("success", "true");
             body.put("message", "供应商更新成功");
             Suppliers result = suppliersService.selectSuppliersById(suppliers.getSupplierId());
@@ -142,6 +163,14 @@ public class SuppliersController {
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
             logUtil.logOperation("delSuppliers",hisData, executedSql, "0", operatorUser);
+            userLogUtil.userLogUtil(
+                    "delete",
+                    hisData,
+                    "Suppliers",
+                    suppliersId,
+                    0,
+                    operatorUser);
+
 
             if (!deleteResult) {
                 body.put("success", "false");

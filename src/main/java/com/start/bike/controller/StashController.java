@@ -6,6 +6,7 @@ import com.start.bike.entity.Product;
 import com.start.bike.entity.Stash;
 import com.start.bike.service.StashService;
 import com.start.bike.util.LogUtil;
+import com.start.bike.util.UserLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,9 @@ public class StashController {
 
     @Autowired
     private LogUtil logUtil;
+
+    @Autowired
+    private UserLogUtil userLogUtil;
 
     @PostMapping("/selectStashById/{stashId}")
     public ResponseEntity<Map<String, Object>> selectStashById(@PathVariable  Integer stashId) {
@@ -93,6 +97,15 @@ public class StashController {
             Stash updateData = stashService.selectStashCreate(stash);
             // 记录操作日志
             logUtil.logOperation("createStash","0", executedSql, updateData, operatorUser);
+
+            userLogUtil.userLogUtil(
+                    "create",
+                    0,
+                    "Stash",
+                    updateData.getStashId(),
+                    updateData,
+                    operatorUser);
+
             body.put("success", "true");
             body.put("message", "仓库创建成功");
             body.put("result", updateData);
@@ -120,6 +133,14 @@ public class StashController {
             // 记录操作日志
             logUtil.logOperation("updateStash",hisData, executedSql, updateData, operatorUser);
 
+            userLogUtil.userLogUtil(
+                    "update",
+                    hisData,
+                    "Stash",
+                    stash.getStashId(),
+                    updateData,
+                    operatorUser);
+
             body.put("success", "true");
             body.put("message", "仓库更新成功");
             body.put("result", updateData);
@@ -133,7 +154,7 @@ public class StashController {
         }
     }
 
-    @PostMapping("/deleteStashById/{stashId}")
+    @PostMapping("/deleteStash/{stashId}")
     public ResponseEntity<Map<String,Object>> deleteStash(
             @PathVariable  Integer stashId,
             @RequestHeader(name = "X-Operator-User", required = false) String operatorUser){
@@ -145,6 +166,13 @@ public class StashController {
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
             logUtil.logOperation("delStash",hisData, executedSql, "0", operatorUser);
+            userLogUtil.userLogUtil(
+                    "delete",
+                    hisData,
+                    "Stash",
+                    stashId,
+                    0,
+                    operatorUser);
             if(!delete){
                 body.put("success", "false");
                 body.put("message", "仓库删除失败");

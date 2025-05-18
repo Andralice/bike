@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.start.bike.mapper.UserLogMapper">
+    <!-- 定义结果映射 -->
+    <resultMap id="user_log_result" type="com.start.bike.entity.UserLog">
+        <result column="hisData" property="hisData" />
+        <result column="entityType" property="entityType" />
+        <result column="updateData" property="updateData" />
+        <result column="actorName" property="actorName"/>
+        <result column="actionTime" property="actionTime" />
+    </resultMap>
+
+    <!-- 插入日志信息 -->
+    <insert id="insertUserLog" parameterType="com.start.bike.entity.UserLog">
+        INSERT INTO tb_user_log (
+            type,
+            hisData,
+            entityType,
+            entityId,
+            updateData,
+            actorName,
+            actionTime
+        ) VALUES (
+                     #{type},
+                     #{hisData},
+                     #{entityType},
+                    #{entityId},
+                     #{updateData},
+                     #{actorName},
+                     NOW()
+                 )
+    </insert>
+
+<!--    查询日志信息-->
+    <select id="selectUserLog" resultMap="user_log_result">
+        SELECT
+            userLogId,
+            type,
+            hisData,
+            entityType,
+             entityId,
+            updateData,
+            actorName,
+            actionTime
+        FROM
+            tb_user_log
+        WHERE 1=1
+        <if test="entityId != null"> AND entityId = #{entityId}</if>
+        <if test="entityType != null"> AND entityType = #{entityType}</if>
+    </select>
+
+    <select id="selectUserLogById" resultMap="user_log_result">
+        SELECT
+        userLogId,
+        type,
+        hisData,
+        entityType,
+        entityId,
+        updateData,
+        actorName,
+        actionTime
+        FROM
+        tb_user_log
+        WHERE userLogId = #{userLogId}
+    </select>
+
+
+</mapper>

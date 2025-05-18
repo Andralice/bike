@@ -9,6 +9,7 @@ import com.start.bike.service.ExamineService;
 import com.start.bike.service.InventoryService;
 import com.start.bike.service.ProductService;
 import com.start.bike.service.UserService;
+import com.start.bike.util.UserLogUtil;
 import com.start.bike.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +40,9 @@ public class InventoryController {
 
     @Autowired
     private LogUtil logUtil;
+
+    @Autowired
+    private UserLogUtil userLogUtil;
 
     @RequestMapping("/selectInventoryById/{inventoryId}")
     public ResponseEntity<Map<String, Object>> selectInventory(
@@ -128,8 +132,6 @@ public class InventoryController {
         ObjectMapper objectMapper = new ObjectMapper(); // 使用 Jackson
         try {
             // 必填字段校验
-
-
             inventoryService.insertInventoryLog(inventory);
 
             // 检查是否存在现有库存记录
@@ -153,6 +155,13 @@ public class InventoryController {
 
                     // 记录操作日志
                     logUtil.logOperation("updateInventory", hisData, executedSql, updateData, operatorUser);
+                    userLogUtil.userLogUtil(
+                            "update",
+                            hisData,
+                            "Inventory",
+                            inventory.getInventoryId(),
+                            updateData,
+                            operatorUser);
 
                     body.put("success", "true");
                     body.put("message", "库存记录更新成功");
@@ -174,6 +183,13 @@ public class InventoryController {
 
                     // 记录操作日志
                     logUtil.logOperation("createInventory", "0", executedSql, inventory, operatorUser);
+                    userLogUtil.userLogUtil(
+                            "create",
+                            hisData,
+                            "Inventory",
+                            inventory.getInventoryId(),
+                            0,
+                            operatorUser);
 
                     body.put("success", "true");
                     body.put("message", "库存记录创建成功");
@@ -226,6 +242,13 @@ public class InventoryController {
 
             // 记录操作日志
             logUtil.logOperation("updateInventory", hisData, executedSql, updateData, operatorUser);
+            userLogUtil.userLogUtil(
+                    "update",
+                    hisData,
+                    "Inventory",
+                    inventory.getInventoryId(),
+                    updateData,
+                    operatorUser);
             body.put("success", "true");
             body.put("message", "库存更新成功");
             body.put("result", updateData);
@@ -251,6 +274,13 @@ public class InventoryController {
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
             logUtil.logOperation("delInventory",hisData, executedSql, "0", operatorUser);
+            userLogUtil.userLogUtil(
+                    "delete",
+                    hisData,
+                    "Inventory",
+                    inventoryId,
+                    0,
+                    operatorUser);
 
             if (!deleteResult) {
                 body.put("success", "false");

@@ -7,6 +7,7 @@ import com.start.bike.entity.Product;
 import com.start.bike.service.InventoryService;
 import com.start.bike.service.ProductService;
 import com.start.bike.util.LogUtil;
+import com.start.bike.util.UserLogUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,9 @@ public class ProductController {
 
     @Autowired
     private LogUtil logUtil;
+
+    @Autowired
+    private UserLogUtil userLogUtil;
 
 
     @RequestMapping("/selectProductById/{productId}")
@@ -105,6 +109,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
         }
     }
+
     @PostMapping("/createProduct")
     public ResponseEntity<Map<String, Object>> insertProduct(
             @RequestBody Product product,
@@ -125,6 +130,13 @@ public class ProductController {
             Product updateData = productService.selectProductCreate(product);
             // 记录操作日志
             logUtil.logOperation("createProduct","0", executedSql, updateData, operatorUser);
+            userLogUtil.userLogUtil(
+                    "create",
+                    0,
+                    "Product",
+                    updateData.getProductId(),
+                    updateData,
+                    operatorUser);
 
 
             body.put("success", true);
@@ -161,6 +173,14 @@ public class ProductController {
             // 记录操作日志
             logUtil.logOperation("updateProduct",hisData, executedSql, result, operatorUser);
 
+            userLogUtil.userLogUtil(
+                    "update",
+                    hisData,
+                    "Product",
+                    product.getProductId(),
+                    result,
+                    operatorUser);
+
 
             body.put("success", "true");
             body.put("message", "商品更新成功");
@@ -186,6 +206,14 @@ public class ProductController {
             String executedSql = ThreadLocalContext.getLastExecutedSql();
             // 记录操作日志
             logUtil.logOperation("delProduct", hisData, executedSql,"0", operatorUser);
+            userLogUtil.userLogUtil(
+                    "delete",
+                    hisData,
+                    "Product",
+                    productId,
+                    0,
+                    operatorUser);
+
             if (!deleteResult) {
                 body.put("success", "false");
                 body.put("message", "商品不存在或删除失败");

@@ -1,6 +1,10 @@
 server:
   port: 8080 # 应用程序运行的端口
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    write-dates-as-timestamps: false
   application:
     name: boke # 应用程序名称
   datasource:
